@@ -1,0 +1,122 @@
+<h2>Smartbox Management Page</h2>
+<div id="SM"></div>
+<div id="SMform">
+    <form method="post" onsubmit="createSmartbox()">
+        <label>Hostname: </label><input type="text" required id="inputHostname"><br>
+        <label>Description: </label><input type="text" required id="inputDescription"><br>
+        <label>Location: </label><input type="text" id="inputLocation" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', ".editSM input", function () {
+            $(this).parent().parent().next().slideToggle();
+        });
+
+        $.ajax({
+            url: "/backend/SM.php",
+            method: "POST",
+            data: {sm: 1},
+            success: function (data) {
+                let sm = JSON.parse(data);
+
+                $("#output #SM").html("<table><thead><tr><th></th><th>Hostname</th><th>Description</th><th>Location</th></tr></thead><tbody>");
+                for (let i = 0; i < data.length; i++) {
+
+                    $("#output #SM table").append("<tr class='SmElement'>" +
+                        "<td></td>" +
+                        "<td>" + sm[i].hostname + "</td>" +
+                        "<td>" + sm[i].description + "</td>" +
+                        "<td>" + sm[i].location + "</td>" +
+                        "<td class='editSM'><input value='Edit' type='button'></td>" +
+                        "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "')></td>" +
+                        "</tr>");
+
+                    $("#output #SM table").append("<tr class='editSMDropDown'>" +
+                        "<td>Change info of Smartbox " + sm[i].hostname + " here:</td>" +
+                        "<td></td>" +
+                        "<td><input value='"+sm[i].description+"' type='text' id='editSMDescription" + sm[i].hostname + "'></td>" +
+                        "<td><input value='"+sm[i].location+"' type='text' id='editSMLocation" + sm[i].hostname + "'></td>" +
+                        "<td><input type='button' value='Confirm' onclick=updateSM('" + sm[i].hostname.toString() + "')></td>" +
+                        "</tr>");
+
+                    $(".editSMDropDown").hide();
+                }
+                $("#output #SM").append("</tbody></table>");
+            }
+        });
+
+    });
+
+
+    function deleteSM(SMHostname) {
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteSM.php",
+                method: "POST",
+                data: {deleteSM: SMHostname},
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Delete got cancelled");
+        }
+
+    }
+
+    function updateSM(SMHostname) {
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
+        if (confirm === "Confirm") {
+            let description = $("#editSMDescription" + SMHostname).val();
+            let locationSM = $("#editSMLocation" + SMHostname).val();
+            if (description.length > 0 && locationSM.length > 0) {
+                $.ajax({
+                    url: "/backend/updateSM.php",
+                    method: "POST",
+                    data: {updateSM: SMHostname, description: description, locationSM: locationSM},
+                    success: function (data) {
+                        alert(data);
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("Update got cancelled. One or more of the values are empty");
+            }
+
+        } else {
+            alert("Update got cancelled");
+        }
+
+    }
+
+    function createSmartbox(){
+
+        let hostname = $("#inputHostname").val();
+        let description = $("#inputDescription").val();
+        let location = $("#inputLocation").val();
+
+        if (hostname.startsWith("SB_")){
+            $.ajax({
+                url: "/backend/createSmartbox.php",
+                method: "POST",
+                data: {createSmartbox: 1, hostname: hostname, description: description, location: location},
+                success: function (data) {
+                    if (data === "exists"){
+                        alert("The Smartbox with a same hostname exists already");
+                    } else {
+                        alert("Create successfully");
+                    }
+                }
+            });
+        } else {
+            alert("Hostname must start with 'SB_'");
+        }
+
+
+
+    }
+</script>

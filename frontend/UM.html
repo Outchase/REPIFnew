@@ -1,0 +1,133 @@
+<h2>User Management Page</h2>
+<div id="UM"></div>
+<div id="UMform">
+    <form method="post" onsubmit="createUser()">
+        <label>Name: </label><input type="text" required id="inputName"><br>
+        <label>First name: </label><input type="text" required id="inputFirstName"><br>
+        <label>Technician: </label><input type="checkbox" id="inputTechnician"><br>
+        <label>Email: </label><input type="email" required id="inputEmail"><br>
+        <label>Password: </label> <input type="password" required id="inputPassword"><br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', ".editUM input", function () {
+            $(this).parent().parent().next().slideToggle();
+        });
+
+
+        $.ajax({
+            url: "/backend/UM.php",
+            method: "POST",
+            data: {um: 1},
+            success: function (data) {
+                let um = JSON.parse(data);
+
+                $("#output #UM").html("<table><thead><tr><th>ID</th><th>Name</th><th>Firstname</th><th>Technician</th><th>Email</th></tr></thead><tbody>");
+                for (let i = 0; i < data.length; i++) {
+                    $("#output #UM table").append("<tr class='UmElement'>" +
+                        "<td id='umIdUser" + um[i].id + "'>" + um[i].id + "</td>" +
+                        "<td>" + um[i].name + "</td>" +
+                        "<td>" + um[i].firstName + "</td>" +
+                        "<td>" + um[i].technician + "</td>" +
+                        "<td>" + um[i].email + "</td>" +
+                        "<td class='editUM'><input value='Edit' type='button'></td>" +
+                        "<td><input value='Delete' type='button' onclick='deleteUser("+um[i].id+")'></td>" +
+                        "</tr>");
+                    $("#output #UM table").append("<tr class='editUMDropDown'>" +
+                        "<td>Change User Info here:</td>" +
+                        "<td><input id='editUserName" + um[i].id + "' value='"+um[i].name+"' type='text'></td>" +
+                        "<td><input id='editUserFirstName" + um[i].id + "' value='"+um[i].firstName +"' type='text'></td>" +
+                        "<td></td>" +
+                        "<td><input id='editUserEmail" + um[i].id + "' value='"+um[i].email +"' type='email'></td>" +
+                        "<td></td>" +
+                        "<td><input type='submit' value='Confirm' onclick='updateUser("+um[i].id+")'></td></tr>"
+                    );
+                    $(".editUMDropDown").hide();
+                }
+                $("#output #UM").append("</tbody></table>");
+
+
+            }
+        });
+
+
+    });
+
+    function updateUser(userID){
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
+        if (confirm === "Confirm") {
+            let name = $("#editUserName" + userID).val();
+            let firstName = $("#editUserFirstName" + userID).val();
+            let email = $("#editUserEmail" + userID).val();
+            if (email.includes("@")){
+                if (name.length > 0 && firstName.length > 0 && email.length > 0){
+                    $.ajax({
+                        url: "/backend/updateUM.php",
+                        method: "POST",
+                        data: {updateUM: userID, name: name, firstName: firstName, email: email },
+                        success: function (data) {
+                            alert(data);
+                            location.reload();
+                        }
+                    });
+                } else {
+                    alert("Update got cancelled. One or more of the values are empty");
+                }
+            } else {
+                alert("email is invalid");
+            }
+        }
+        else {
+            alert("Update got cancelled");
+        }
+
+    }
+
+    function deleteUser(userID){
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteUM.php",
+                method: "POST",
+                data: {deleteUM: userID },
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                }
+            });
+        }
+        else {
+            alert("Delete got cancelled");
+        }
+
+    }
+
+    function createUser(){
+        let technician;
+        if ($("#inputTechnician").is(":checked")){
+           technician = 1;
+        } else {
+            technician = 0;
+        }
+        let name = $("#inputName").val();
+        let firstName = $("#inputFirstName").val();
+        let email = $("#inputEmail").val();
+        let password = $("#inputPassword").val();
+
+        $.ajax({
+            url: "/backend/createUser.php",
+            method: "POST",
+            data: {createUser: 1, name: name, firstName: firstName, technician: technician, email: email, password: password},
+            success: function (data) {
+               if (data === "exists"){
+                   alert("The user with a same email exists already");
+               } else {
+                   alert("Create successfully");
+               }
+            }
+        });
+
+    }
+</script>
