@@ -18,14 +18,14 @@
 
 
         $.ajax({
-            url: "/backend/UM.php",
+            url: "/backend/showUM.php",
             method: "POST",
             data: {um: 1},
             success: function (data) {
                 let um = JSON.parse(data);
 
                 $("#output #UM").html("<table><thead><tr><th>ID</th><th>Name</th><th>Firstname</th><th>Technician</th><th>Email</th></tr></thead><tbody>");
-                for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < um.length; i++) {
                     $("#output #UM table").append("<tr class='UmElement'>" +
                         "<td id='umIdUser" + um[i].id + "'>" + um[i].id + "</td>" +
                         "<td>" + um[i].name + "</td>" +
