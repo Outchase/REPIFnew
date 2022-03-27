@@ -4,6 +4,7 @@
 <head>
     <title>index.html</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="main.css">
     <script src="/Other/jquery.js"></script>
     <script>
 

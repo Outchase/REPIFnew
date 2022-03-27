@@ -1,6 +1,6 @@
 <h2>Smartbox Management Page</h2>
 <div id="SM"></div>
-<div id="smAssignList"></div>
+<div id="smResponse"></div>
 <div id="SMform">
     <form method="post" onsubmit="createSmartbox()">
         <label>Hostname: </label><input type="text" required id="inputHostname"><br>
@@ -34,7 +34,7 @@
                         "<td class='editSM'><input value='Edit' type='button'></td>" +
                         "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "')></td>" +
                         "<td><input value='SmartBox zuweisen' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "')></td>" +
-                        "<td><input value='Pins' type='button'></td>" +
+                        "<td><input value='Pins' type='button' onclick=pinsSM('" + sm[i].hostname.toString() + "')></td>" +
                         "</tr>");
 
                     $("#output #SM table").append("<tr class='editSMDropDown'>" +
@@ -50,8 +50,113 @@
                 $("#output #SM").append("</tbody></table>");
             }
         });
-
     });
+
+    function addPins(SMHostname) {
+        $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td><input type='button' value='+' onclick=insertPins('" + SMHostname + "')></td>");
+    }
+
+    function insertPins(SMHostname) {
+        let addPinDesc = $("#addPinDesc" + SMHostname).val();
+        let addPinInOut = $("#addPinInOut" + SMHostname);
+        let addPinNr = $("#addPinId" + SMHostname).val();
+        if (addPinInOut.is(":checked")) {
+            addPinInOut = 1;
+        } else {
+            addPinInOut = 0;
+        }
+
+        if (addPinDesc.startsWith("GPIO") && addPinDesc.length > 4 && addPinDesc.length < 7 && addPinNr !== "") {
+            let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
+            if (confirm === "Confirm") {
+                $.ajax({
+                    url: "/backend/addPinsSM.php",
+                    method: "POST",
+                    data: {
+                        addPins: 1,
+                        hostname: SMHostname,
+                        addPinDesc: addPinDesc,
+                        addPinInOut: addPinInOut,
+                        addPinNr: addPinNr
+                    },
+                    success: function (data) {
+                        alert(data);
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("Update got cancelled");
+            }
+        } else {
+            alert("Invalid values");
+        }
+
+    }
+
+    function deletePins(PinNr, hostname) {
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deletePinsSM.php",
+                method: "POST",
+                data: {deletePins: 1, pinNr: PinNr, hostname: hostname},
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Delete got cancelled");
+        }
+    }
+
+    function pinsSM(SMHostname) {
+        $.ajax({
+            url: "/backend/showPinsSM.php",
+            method: "POST",
+            data: {pins: 1, hostname: SMHostname},
+            success: function (data) {
+                $("#smResponse").html(data);
+            }
+        });
+    }
+
+    function updatePins(PinNr, hostname) {
+        let pinsDescription = $("#editPinsDescription" + PinNr).val();
+        let pinsInOut = $("#editPinsInOut" + PinNr);
+
+        if (pinsInOut.is(":checked")) {
+            pinsInOut = 1;
+        } else {
+            pinsInOut = 0;
+        }
+        if (pinsDescription.startsWith("GPIO") && pinsDescription.length > 4 && pinsDescription.length < 7) {
+            let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
+            if (confirm === "Confirm") {
+                $.ajax({
+                    url: "/backend/updatePins.php",
+                    method: "POST",
+                    data: {
+                        updatePin: 1,
+                        pinsDesc: pinsDescription,
+                        pinsInOut: pinsInOut,
+                        hostname: hostname,
+                        pinId: PinNr
+                    },
+                    success: function (data) {
+                        alert(data);
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("Update got cancelled");
+            }
+        } else {
+            alert("Invalid values");
+        }
+
+
+    }
 
     function smAssign(SMHostname) {
         $.ajax({
@@ -59,15 +164,15 @@
             method: "POST",
             data: {assign: 1, hostname: SMHostname},
             success: function (data) {
-                $("#smAssignList").html(data);
+                $("#smResponse").html(data);
             }
         });
     }
 
-    function updateSmAssign(SMHostname){
-        let confirm = prompt("Are you sure you want to assign "+ SMHostname +" to User: "+ $("#umOptions option").filter(':selected').text() +"?\nType 'Confirm' to confirm it:");
+    function updateSmAssign(SMHostname) {
+        let confirm = prompt("Are you sure you want to assign " + SMHostname + " to User: " + $("#umOptions option").filter(':selected').text() + "?\nType 'Confirm' to confirm it:");
         if (confirm === "Confirm") {
-           let userId = $("#umOptions").val();
+            let userId = $("#umOptions").val();
             $.ajax({
                 url: "/backend/addNewAssignmentToUser.php",
                 method: "POST",
@@ -141,6 +246,7 @@
                     } else {
                         alert("Create successfully");
                     }
+                    location.reload();
                 }
             });
         } else {
@@ -149,4 +255,5 @@
 
 
     }
+
 </script>
