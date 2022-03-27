@@ -1,5 +1,5 @@
 <?php
-$servername = "127.0.0.1";
+$servername = "172.16.248.163";
 $username = "pif_user";
 $password = "userpw";
 $dbname = "rexiz123";

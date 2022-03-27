@@ -1,8 +1,7 @@
 <?php
-
 if (isset($_POST['sm'])) {
     include_once "sqlConnect.inc";
-    $sql = "SELECT * FROM `tblsmartbox`";
+    $sql = "SELECT * FROM tblSmartbox";
     $result = $mysqli->query($sql);
     $a = array();
 

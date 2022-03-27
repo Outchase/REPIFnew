@@ -7,11 +7,11 @@ if (isset($_POST['assign'])) {
     $sql = "SELECT fiUserNr FROM `tblConfigure` WHERE fiHostname='$hostname'";
     $result = $mysqli->query($sql);
     if ($result->num_rows > 0) {
-       $output= "<p style='color: red'>Already assigned</p>";
+       $output= "<p style='color: red'>Smartbox ".$hostname." is already assigned to the Client</p>";
     } else{
         $sql = "SELECT * FROM `tblUser`";
         $result = $mysqli->query($sql);
-        $output= "<form method='post' onsubmit=updateSmAssign('".$hostname. "')><label>".$hostname. "</label><select  id='umOptions'>";
+        $output= "<form method='post' onsubmit=updateSmAssign('".$hostname. "')><label>Assign ".$hostname. " to: </label><select  id='umOptions'>";
         if ($result->num_rows > 0) {
             for ($i=0; $i<mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);

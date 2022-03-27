@@ -7,7 +7,7 @@ if (isset($_POST['updateUM'])){
     $umEmail= $_POST['email'];
 
 
-    $sql = $mysqli-> prepare("UPDATE tbluser SET dtName=?, dtFirstName=?, dtEmail=? WHERE idUserNr=?");
+    $sql = $mysqli-> prepare("UPDATE tblUser SET dtName=?, dtFirstName=?, dtEmail=? WHERE idUserNr=?");
     $sql->bind_param('sssi', $umName, $umFirstName, $umEmail, $umID);
     $sql-> execute();
 

@@ -9,7 +9,7 @@ if (isset($_POST['createSmartbox'])){
     $sql = "SELECT idHostname FROM `tblSmartbox` WHERE idHostname='$hostname'";
     $result = $mysqli->query($sql);
     if ($result->num_rows > 0) {
-        echo "exists";
+        echo "The Smartbox with a same hostname exists already";
     }else{
 
         $sql = $mysqli->prepare("INSERT INTO tblSmartbox (idHostname, dtDescription, dtLocation) VALUES (?, ?, ?)");
@@ -17,6 +17,8 @@ if (isset($_POST['createSmartbox'])){
         $sql->bind_param('sss', $hostname, $description, $location);
         $sql-> execute();
         $sql->close();
+
+        echo "Create successfully";
     }
     $mysqli->close();
 

@@ -13,7 +13,7 @@ if (isset($_POST['pins'])){
                 if($row['dtInputOrOutput']=== "1"){
                     $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox' checked  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='update pins' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' value='delete pins' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></td></tr>";
                 } else{
-                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox'  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='update pins' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td></tr>";
+                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox'  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='update pins' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' value='delete pins' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></tr>";
                 }
         }
 

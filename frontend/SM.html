@@ -2,11 +2,22 @@
 <div id="SM"></div>
 <div id="smResponse"></div>
 <div id="SMform">
+    <h2>Create a new Smartbox:</h2>
     <form method="post" onsubmit="createSmartbox()">
         <label>Hostname: </label><input type="text" required id="inputHostname"><br>
         <label>Description: </label><input type="text" required id="inputDescription"><br>
         <label>Location: </label><input type="text" id="inputLocation" required><br>
         <input type="submit" value="Submit">
+    </form>
+</div>
+<div id="SMfileUplad">
+    <h2>Upload Form:</h2>
+    <form method="post" onsubmit="uploadFile()" enctype="multipart/form-data" id="fileForm">
+        <label>FileName: </label><input id="fileName" type="text" name="fileName" required><br>
+        <label>File Description: </label><input id="fileDesc" type="text" name="fileDesc" required><br>
+        <input id="uploadScript" type="file" accept="*" name="uploadScript" required><br>
+        <input type="submit" value="Upload" required>
+        <input type="button" value="Cancel" onclick="cancelUpload()">
     </form>
 </div>
 <script>
@@ -33,7 +44,7 @@
                         "<td>" + sm[i].location + "</td>" +
                         "<td class='editSM'><input value='Edit' type='button'></td>" +
                         "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "')></td>" +
-                        "<td><input value='SmartBox zuweisen' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "')></td>" +
+                        "<td><input value='Assign SmartBox to a Client' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "')></td>" +
                         "<td><input value='Pins' type='button' onclick=pinsSM('" + sm[i].hostname.toString() + "')></td>" +
                         "</tr>");
 
@@ -51,6 +62,26 @@
             }
         });
     });
+
+    function cancelUpload(){
+        location.reload();
+    }
+
+    function uploadFile(){
+        let form = $("#fileForm")[0];
+        $.ajax({
+            url: "/backend/uploadScripts.php",
+            method: "POST",
+            data: new FormData(form),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function (data) {
+                alert(data);
+            }
+        });
+
+    }
 
     function addPins(SMHostname) {
         $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td><input type='button' value='+' onclick=insertPins('" + SMHostname + "')></td>");
@@ -241,11 +272,7 @@
                 method: "POST",
                 data: {createSmartbox: 1, hostname: hostname, description: description, location: location},
                 success: function (data) {
-                    if (data === "exists") {
-                        alert("The Smartbox with a same hostname exists already");
-                    } else {
-                        alert("Create successfully");
-                    }
+                    alert(data);
                     location.reload();
                 }
             });

@@ -6,7 +6,7 @@ if (isset($_POST['updateSM'])){
     $smLocation= $_POST['locationSM'];
 
 
-    $sql = $mysqli-> prepare("UPDATE tblsmartbox SET dtDescription=?, dtLocation=? WHERE idHostname=?");
+    $sql = $mysqli-> prepare("UPDATE tblSmartbox SET dtDescription=?, dtLocation=? WHERE idHostname=?");
     $sql->bind_param('sss', $smDescription, $smLocation, $smHostname);
     $sql-> execute();
 
