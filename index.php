@@ -4,62 +4,63 @@
 <head>
     <title>index.html</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="main.css">
-    <script src="/Other/jquery.js"></script>
+    <link rel="stylesheet" href="main.css">                     <!--Links css file to index page-->
+    <script src="/Other/jquery.js"></script>                   <!--Links jquery file to index page-->
     <script>
 
-        $(document).ready(function () {
-            $("#login").on('click', function () {
-                let email = $("#inputEmail").val();
+        $(document).ready(function () {                     //When the document is ready execute the function below
+            $("#login").on('click', function () {           //listens onclick event on Id login
+                let email = $("#inputEmail").val();         //saves input value of selected Id into a variable
                 let password = $("#inputPassword").val();
-                if (email === "" || password === "") {
-                    alert("Please insert a email or Password");
-                } else {
+                if (email === "" || password === "") {      //check if one of the variable are empty
+                    alert("Please insert a email or Password");     //display error message if the variable is empty
+                } else {                                            //else executes ajax method
                     $.ajax({
-                        url: "/backend/login.php",
-                        method: "POST",
-                        data: {login: 1, email: email, password: password},
-                        success: function (data) {
-                            if (data === "") {
-                                $("#response").html("Email or password is wrong!");
+                        url: "/backend/login.php",                  //Specifies the URL to send the request to
+                        method: "POST",                             //chose request method
+                        data: {login: 1, email: email, password: password},     //Specifies data to be sent to the server
+                        success: function (data) {                              //execute function when request was a success
+                            if (data === "") {                                  //checks if data is empty
+                                $("#response").html("Email or password is wrong!"); //send message to the selected html id
                             } else {
-                                $("#output").load(data);
-                                location.reload();
+                                location.reload();                          //reloads page
                             }
                         }
                     });
                 }
             });
-            $("#logout").on('click', function () {
-                $.ajax({
-                    url: "/backend/logout.php",
-                    method: "POST",
-                    data: {logout: 1},
-                    success: function (data) {
-                        $("#output").load(data);
-                        location.reload();
-                    }
-                });
-            });
+
         });
+        function logoutUser(){                              //execute function logout when user presses on navigation bar "Log Out"
+            $.ajax({                                        //executes ajax method
+                url: "/backend/logout.php",
+                method: "POST",
+                data: {logout: 1},
+                success: function (data) {                  //execute function when request was a success
+                    $("#output").load(data);                //load file to the div with Id output
+                    location.reload();
+                }
+            });
+        };
     </script>
 </head>
 <body>
 <?php
-if (isset($_SESSION["loggedIN"])){
-include_once "./frontend/navigation.html"; ?>
+if (isset($_SESSION["loggedIN"])){                      //check if Session is set
+include_once "./frontend/navigation.html";              //includes navigation html page
+?>
 <div id="output">
     <?php
 
-    if ($_GET['page'] === "UM") {
-            include_once "./frontend/UM.html";
-    }else if ($_GET['page'] === "SM") {
-            include_once "./frontend/SM.html";
+    if ($_GET['page'] === "UM") {                           //check if Get page has the value UM
+            include_once "./frontend/UM.html";             //replace in div element with id output with User management page
+    }else if ($_GET['page'] === "SM") {                   //check if Get page has the value SM
+            include_once "./frontend/SM.html";           //replace in div output the content with Smartbox management page
     } else {
-        include_once "./frontend/welcome.html";
+        include_once "./backend/welcome.php";           //else replace it with welcome page
     }
 } else {
-        include_once "./frontend/login.html";
+        include_once "./frontend/login.html";           //includes login page when session is not set
 }
     ?>
 </div>

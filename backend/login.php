@@ -2,23 +2,23 @@
 
 session_start();
 
-if (isset($_POST['login'])) {
-    include_once "sqlConnect.inc";
+if (isset($_POST['login'])) {                       //checks if Post login is set
+    include_once "sqlConnect.inc";                  //connects to database server
 
 
 
-    $email = $_POST['email'];
-    $password = hash('gost', $_POST['password']);
+    $email = $_POST['email'];                       //saves post login into a vaiable
+    $password = hash('gost', $_POST['password']);   //encrypts post login with gost and saves it into a variable
 
-    $sql = "SELECT idUserNr FROM `tblUser` WHERE dtEmail='$email' AND dtPassword='$password'";
-    $result = $mysqli->query($sql);
+    $sql = "SELECT idUserNr FROM `tblUser` WHERE dtEmail='$email' AND dtPassword='$password'";     //query selects value from Table tblUser in database
+    $result = $mysqli->query($sql);                                                     //performs query in a database and saves result into a variable
 
-    if ($result->num_rows > 0) {
-        $_SESSION["loggedIN"] = "1";
+    if ($result->num_rows > 0) {                                     //Return the number of rows in a result set
+        $_SESSION["loggedIN"] = "1";                                //sets and saves values into a Session
         $_SESSION["email"] = $email;
-    exit("./frontend/main.html");
+    exit("success");                                   //Prints a message and exits the current script
     } else {
-        exit("");
+        exit("");                                                    //Prints a message (empyt String) and exits the current script
     }
 }
 

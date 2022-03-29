@@ -1,20 +1,17 @@
 <?php
 if (isset($_POST['deletePins'])){
-    include_once "sqlConnect.inc";
+    include_once "sqlConnect.inc";      //connect to database
 
-    $delPinNr= $_POST['pinNr'];
+    $delPinNr= $_POST['pinNr'];         // saves post values into variables
     $hostname= $_POST['hostname'];
 
+    $sql = $mysqli->prepare("DELETE FROM tblPin WHERE idPinNr=? AND fiHostname=?");     //user prepare statement to delete the specific pinNumber and hostname
+    $sql->bind_param('is', $delPinNr, $hostname);       //bound parameters
+    $sql->execute();            //executes sql
 
-    //"DELETE FROM `tblpin` WHERE `tblpin`.`idPinNr` = 33 AND `tblpin`.`fiHostname` = \'SB_2\'" wirklich ausführen?
+    echo "Delete successfully";     //sends back a message
 
-    $sql = $mysqli->prepare("DELETE FROM tblPin WHERE idPinNr=? AND fiHostname=?");
-    $sql->bind_param('is', $delPinNr, $hostname);
-    $sql->execute();
-
-    echo "Delete successfully";
-
-    $sql->close();
+    $sql->close();         //close sql and connection to database
     $mysqli->close();
 
 }

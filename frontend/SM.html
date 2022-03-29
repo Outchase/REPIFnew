@@ -11,31 +11,35 @@
     </form>
 </div>
 <div id="SMfileUplad">
-    <h2>Upload Form:</h2>
+    <h2>Upload Script:</h2>
     <form method="post" onsubmit="uploadFile()" enctype="multipart/form-data" id="fileForm">
         <label>FileName: </label><input id="fileName" type="text" name="fileName" required><br>
         <label>File Description: </label><input id="fileDesc" type="text" name="fileDesc" required><br>
+        <label>Choose a smartbox: </label><select id="sbList" required name="hostname"></select><br>
         <input id="uploadScript" type="file" accept="*" name="uploadScript" required><br>
         <input type="submit" value="Upload" required>
         <input type="button" value="Cancel" onclick="cancelUpload()">
     </form>
 </div>
 <script>
-    $(document).ready(function () {
-
-        $(document).on('click', ".editSM input", function () {
-            $(this).parent().parent().next().slideToggle();
+    $(document).ready(function () {         //execute this function when decument is ready
+        $.get("/backend/getSmartboxList.php", function (data){ //send a Get request on the specific par
+            $("#sbList").html(data);            //adds content on the selectbox in Upload script form
         });
 
-        $.ajax({
+        $(document).on('click', ".editSM input", function () {     //listens to a click event at the edit button in Smartbox Management Table
+            $(this).parent().parent().next().slideToggle();            //Toggle between slideUp() and slideDown() for the selected element
+        });
+
+        $.ajax({                                    //ajax method that get the list of Samrtboxes from database
             url: "/backend/showSM.php",
             method: "POST",
             data: {sm: 1},
-            success: function (data) {
+            success: function (data) {      //on success generates the list into a table and append them in index page
                 let sm = JSON.parse(data);
 
                 $("#output #SM").html("<table><thead><tr><th></th><th>Hostname</th><th>Description</th><th>Location</th></tr></thead><tbody>");
-                for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {             // creates each round 2 table rows
 
                     $("#output #SM table").append("<tr class='SmElement'>" +
                         "<td></td>" +
@@ -56,18 +60,18 @@
                         "<td><input type='button' value='Confirm' onclick=updateSM('" + sm[i].hostname.toString() + "')></td>" +
                         "</tr>");
 
-                    $(".editSMDropDown").hide();
+                    $(".editSMDropDown").hide();            //2nd is hidden and the selected 2nd rows appears by clicking on the edit button on the first row
                 }
                 $("#output #SM").append("</tbody></table>");
             }
         });
     });
 
-    function cancelUpload(){
+    function cancelUpload(){        //reloads page when pressing the cancel button in Upload Scripts
         location.reload();
     }
 
-    function uploadFile(){
+    function uploadFile(){              //get values from upload file Form and send with ajax a Post request to the server
         let form = $("#fileForm")[0];
         $.ajax({
             url: "/backend/uploadScripts.php",
@@ -76,30 +80,30 @@
             contentType: false,
             cache: false,
             processData:false,
-            success: function (data) {
+            success: function (data) {  //on success a message will display
                 alert(data);
             }
         });
 
     }
 
-    function addPins(SMHostname) {
+    function addPins(SMHostname) {      //adds a row to insert values for a new pin
         $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td><input type='button' value='+' onclick=insertPins('" + SMHostname + "')></td>");
     }
 
-    function insertPins(SMHostname) {
-        let addPinDesc = $("#addPinDesc" + SMHostname).val();
+    function insertPins(SMHostname) {       //inserts the values from new added pins into database
+        let addPinDesc = $("#addPinDesc" + SMHostname).val();       //get the values from selected row and save them into variables
         let addPinInOut = $("#addPinInOut" + SMHostname);
         let addPinNr = $("#addPinId" + SMHostname).val();
-        if (addPinInOut.is(":checked")) {
+        if (addPinInOut.is(":checked")) {       //replace the value of checkbox with numbers and save it in the variable
             addPinInOut = 1;
         } else {
             addPinInOut = 0;
         }
 
-        if (addPinDesc.startsWith("GPIO") && addPinDesc.length > 4 && addPinDesc.length < 7 && addPinNr !== "") {
+        if (addPinDesc.startsWith("GPIO") && addPinDesc.length > 4 && addPinDesc.length < 7 && addPinNr !== "") {       //checks if description input starts with GPIO and the length is between 4 and 6
             let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-            if (confirm === "Confirm") {
+            if (confirm === "Confirm") {         //checks if prompt value is correct
                 $.ajax({
                     url: "/backend/addPinsSM.php",
                     method: "POST",
@@ -109,14 +113,14 @@
                         addPinDesc: addPinDesc,
                         addPinInOut: addPinInOut,
                         addPinNr: addPinNr
-                    },
-                    success: function (data) {
+                    },      //makes with ajax method the  Post request
+                    success: function (data) {          //on success a message will display and reloads the page
                         alert(data);
                         location.reload();
                     }
                 });
             } else {
-                alert("Update got cancelled");
+                alert("Update got cancelled");      //son prompt cancel or mistype
             }
         } else {
             alert("Invalid values");
@@ -124,14 +128,14 @@
 
     }
 
-    function deletePins(PinNr, hostname) {
+    function deletePins(PinNr, hostname) {          //deleted selected pins
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
-                url: "/backend/deletePinsSM.php",
+                url: "/backend/deletePinsSM.php",   //sends data over post request
                 method: "POST",
                 data: {deletePins: 1, pinNr: PinNr, hostname: hostname},
-                success: function (data) {
+                success: function (data) {      //on success display parameter and reload page
                     alert(data);
                     location.reload();
                 }
@@ -141,29 +145,29 @@
         }
     }
 
-    function pinsSM(SMHostname) {
+    function pinsSM(SMHostname) {           //displays pins when the pins button is clicked on Smartbox Management table
         $.ajax({
             url: "/backend/showPinsSM.php",
             method: "POST",
-            data: {pins: 1, hostname: SMHostname},
-            success: function (data) {
-                $("#smResponse").html(data);
+            data: {pins: 1, hostname: SMHostname},  //sends data over post request to the url
+            success: function (data) {              //on success add message to the selected html id
+                $("#smResponse").html(data);        //displays the selected smartbox pins from database
             }
         });
     }
 
-    function updatePins(PinNr, hostname) {
-        let pinsDescription = $("#editPinsDescription" + PinNr).val();
+    function updatePins(PinNr, hostname) {      //updated changes from Pins
+        let pinsDescription = $("#editPinsDescription" + PinNr).val();    //saves values into variables
         let pinsInOut = $("#editPinsInOut" + PinNr);
 
-        if (pinsInOut.is(":checked")) {
+        if (pinsInOut.is(":checked")) {     //replaces the checkbox values into numbers
             pinsInOut = 1;
         } else {
             pinsInOut = 0;
         }
-        if (pinsDescription.startsWith("GPIO") && pinsDescription.length > 4 && pinsDescription.length < 7) {
+        if (pinsDescription.startsWith("GPIO") && pinsDescription.length > 4 && pinsDescription.length < 7) {   //checks samrtbox description start with GPIO and if the length is between 4 and 7
             let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-            if (confirm === "Confirm") {
+            if (confirm === "Confirm") {        //on confirm perform a post request to the selected url
                 $.ajax({
                     url: "/backend/updatePins.php",
                     method: "POST",
@@ -174,7 +178,7 @@
                         hostname: hostname,
                         pinId: PinNr
                     },
-                    success: function (data) {
+                    success: function (data) {      //on success display message and reload page
                         alert(data);
                         location.reload();
                     }
@@ -189,27 +193,27 @@
 
     }
 
-    function smAssign(SMHostname) {
+    function smAssign(SMHostname) {     //onclick checks if it a new smartbox and generates a from to assign the new smartbox to a client that exists
         $.ajax({
-            url: "/backend/assignSM.php",
+            url: "/backend/assignSM.php",       //makes post request to the specific url
             method: "POST",
             data: {assign: 1, hostname: SMHostname},
-            success: function (data) {
+            success: function (data) {      //on success display data into the selected html element
                 $("#smResponse").html(data);
             }
         });
     }
 
-    function updateSmAssign(SMHostname) {
+    function updateSmAssign(SMHostname) {       //assigns smartbox to a user when the button Assign is clicked
         let confirm = prompt("Are you sure you want to assign " + SMHostname + " to User: " + $("#umOptions option").filter(':selected').text() + "?\nType 'Confirm' to confirm it:");
-        if (confirm === "Confirm") {
+        if (confirm === "Confirm") {        // on confirm makes a post request to the server
             let userId = $("#umOptions").val();
             $.ajax({
                 url: "/backend/addNewAssignmentToUser.php",
                 method: "POST",
                 data: {addAssign: 1, hostname: SMHostname, userId: userId},
                 success: function (data) {
-                    alert(data);
+                    alert(data);        //display the message
                 }
             });
         } else {
@@ -217,14 +221,14 @@
         }
     }
 
-    function deleteSM(SMHostname) {
+    function deleteSM(SMHostname) {     //deletes smartbox when the delete button is pressed
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
-        if (confirm === "Delete") {
+        if (confirm === "Delete") {     //checks if user confirms to delete the selected smartbox
             $.ajax({
-                url: "/backend/deleteSM.php",
+                url: "/backend/deleteSM.php",       //makes post request to this url
                 method: "POST",
                 data: {deleteSM: SMHostname},
-                success: function (data) {
+                success: function (data) {      //on success display message and reload page
                     alert(data);
                     location.reload();
                 }
@@ -235,17 +239,17 @@
 
     }
 
-    function updateSM(SMHostname) {
+    function updateSM(SMHostname) {     //update the changes from smartboxes
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-        if (confirm === "Confirm") {
-            let description = $("#editSMDescription" + SMHostname).val();
+        if (confirm === "Confirm") {        //checks if user confirm the changes
+            let description = $("#editSMDescription" + SMHostname).val();       //saves values into variables
             let locationSM = $("#editSMLocation" + SMHostname).val();
-            if (description.length > 0 && locationSM.length > 0) {
+            if (description.length > 0 && locationSM.length > 0) {      //checks if values are not empty
                 $.ajax({
-                    url: "/backend/updateSM.php",
+                    url: "/backend/updateSM.php",       //makes post request to the url
                     method: "POST",
                     data: {updateSM: SMHostname, description: description, locationSM: locationSM},
-                    success: function (data) {
+                    success: function (data) {      //on success displays message and reload page
                         alert(data);
                         location.reload();
                     }
@@ -260,18 +264,18 @@
 
     }
 
-    function createSmartbox() {
+    function createSmartbox() {     //creates a new Smartbox and cancels if Smartbox exists in database
 
-        let hostname = $("#inputHostname").val();
+        let hostname = $("#inputHostname").val();           //save value from form into variables
         let description = $("#inputDescription").val();
         let location = $("#inputLocation").val();
 
-        if (hostname.startsWith("SB_")) {
+        if (hostname.startsWith("SB_")) {       //checks if hostname value starts with SB_
             $.ajax({
-                url: "/backend/createSmartbox.php",
+                url: "/backend/createSmartbox.php",     //makes post request to url
                 method: "POST",
                 data: {createSmartbox: 1, hostname: hostname, description: description, location: location},
-                success: function (data) {
+                success: function (data) {      //on success display message an reload page
                     alert(data);
                     location.reload();
                 }

@@ -1,18 +1,17 @@
 <?php
 if (isset($_POST['updatePin'])) {
-    include_once "sqlConnect.inc";
+    include_once "sqlConnect.inc";      //connects to database
     $pinsDesc = $_POST['pinsDesc'];
     $pinsInOut = $_POST['pinsInOut'];
     $hostname = $_POST['hostname'];
     $pinId = $_POST['pinId'];
 
-    //UPDATE `tblpin` SET `dtDescription` = 'GPIO5' WHERE `idPinNr` = 7 AND `fiHostname` = 'SB_1';
-    $sql = $mysqli-> prepare("UPDATE tblPin SET dtDescription=?, dtInputOrOutput =? WHERE idPinNr=? AND fiHostname =?");
-    $sql->bind_param('siis', $pinsDesc, $pinsInOut, $pinId, $hostname);
-    $sql-> execute();
-    echo "Update successfully";
+    $sql = $mysqli-> prepare("UPDATE tblPin SET dtDescription=?, dtInputOrOutput =? WHERE idPinNr=? AND fiHostname =?");    //use prepare statement to update the values from specific pin number and hostname
+    $sql->bind_param('siis', $pinsDesc, $pinsInOut, $pinId, $hostname);     //bound parameter
+    $sql-> execute();       //executes sql
+    echo "Update successfully";     //sends message back
 
-    $sql->close();
+    $sql->close();      //close sql and database connection
     $mysqli->close();
 }
 ?>
