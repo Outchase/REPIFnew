@@ -7,7 +7,7 @@ if (isset($_POST['addPins'])){      //when it is set executes the rest
     $addPinInOut = $_POST['addPinInOut'];
     $addPinNr = $_POST['addPinNr'];
 
-    $sql = "SELECT * FROM tblPin WHERE idPinNr='$addPinNr'";       //query to selected everything from specific Id
+    $sql = "SELECT * FROM tblPin WHERE idPinNr='$addPinNr' AND fiHostname='$hostname'";       //query to selected everything from specific Id
     $result = $mysqli->query($sql);         //saves query result into variable
     if ($result->num_rows > 0) {            //checks the number of rows from result
      echo "Error: Pin Number is already used";      //display error message when Pin is already in use
