@@ -31,7 +31,8 @@
             });
 
         });
-        function logoutUser(){                              //execute function logout when user presses on navigation bar "Log Out"
+
+        function logoutUser() {                              //execute function logout when user presses on navigation bar "Log Out"
             $.ajax({                                        //executes ajax method
                 url: "/backend/logout.php",
                 method: "POST",
@@ -47,17 +48,29 @@
 <body>
 <?php
 if (isset($_SESSION["loggedIN"])){                      //check if Session is set
-include_once "./frontend/navigation.html";              //includes navigation html page
+if ($_SESSION["technician"] === "1") {                  //check if logged user is a Technician
+    include_once "./frontend/techNavigation.html";              //includes navigation html page
+} else {
+    include_once "./frontend/userNavigation.html";
+}
+
 ?>
 <div id="output">
     <?php
-
-    if ($_GET['page'] === "UM") {                           //check if Get page has the value UM
+    if ($_SESSION["technician"] === "1") {                      //check if logged user is a Technician
+        if ($_GET['page'] === "UM") {                           //check if Get page has the value UM
             include_once "./frontend/UM.html";             //replace in div element with id output with User management page
-    }else if ($_GET['page'] === "SM") {                   //check if Get page has the value SM
+        } else if ($_GET['page'] === "SM") {                   //check if Get page has the value SM
             include_once "./frontend/SM.html";           //replace in div output the content with Smartbox management page
+        } else {
+            include_once "./backend/welcome.php";
+        }
     } else {
-        include_once "./backend/welcome.php";           //else replace it with welcome page
+        if ($_GET['page'] === "SU") {
+            include_once "./frontend/userSmartbox.html";    // includes web page for the user
+        } else {
+            include_once "./backend/welcome.php";
+        }
     }
 } else {
         include_once "./frontend/login.html";           //includes login page when session is not set

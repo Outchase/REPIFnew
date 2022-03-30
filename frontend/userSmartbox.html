@@ -1,0 +1,15 @@
+<h2>User Smartbox</h2>
+<div id="showSmartbox"></div>
+<script>
+    $(document).ready(function (){          //when document is read
+
+        $.ajax({
+            url: "./backend/showSmartboxTable.php",     //makes post request to the url
+            method: "POST",
+            data: {su: 1},
+            success: function (data) {      //on success display table for the specific user
+                $("#showSmartbox").html(data);
+            }
+        });
+    });
+</script>
