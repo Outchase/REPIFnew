@@ -13,4 +13,16 @@
         });
     });
 
+    function showGroups(hostname){
+        $.ajax({
+            url: "./backend/showSmartboxGroup.php",     //makes post request to the url
+            method: "POST",
+            data: {smGr: 1, hostname: hostname},
+            success: function (data) {      //on success display table for the specific user
+                $("#groupsContent").html(data);
+            }
+        });
+
+
+    }
 </script>
