@@ -34,7 +34,7 @@ if (isset($_POST['su'])){
             $output="<table><thead><tr><th>Hostname</th><th>Description</th><th>Location</th></tr></thead><tbody>";
             for ($i=0; $i<mysqli_num_rows($result); $i++){
                 $row = mysqli_fetch_assoc($result);
-                $output.= "<tr><td>".$row['idHostname']. "</td><td>" . $row['dtDescription'] . "</td><td>" . $row['dtLocation'] ."</td></tr>";      //create rows with values that got fetched from the msql result
+                $output.= "<tr><td>".$row['idHostname']. "</td><td>" . $row['dtDescription'] . "</td><td>" . $row['dtLocation'] ."</td><td><button onclick=showGroups('".$row['idHostname']."')>Show Groups</button></td></tr>";      //create rows with values that got fetched from the msql result
             }
         } else {
             $output = "false";              // error if there are no results
@@ -42,7 +42,7 @@ if (isset($_POST['su'])){
 
 
 
-       $output.= "</tbody></table>";
+       $output.= "</tbody></table><div id='groupsContent'>Test</div><form method='post' onsubmit='createGroup()'><label>Group Name: </label><input type='text'><br><label>Description: </label><input type='text'></form>";
     }else {                                             //else sends message that there are no smartboxes
         $output= "<p>No smartboxes assigned</p>";
     }
