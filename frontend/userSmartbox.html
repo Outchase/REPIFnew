@@ -1,7 +1,7 @@
 <h2>User Smartbox</h2>
 <div id="showSmartbox"></div>
 <script>
-    $(document).ready(function (){          //when document is read
+    $(document).ready(function (){          //when document is ready
 
         $.ajax({
             url: "./backend/showSmartboxTable.php",     //makes post request to the url
@@ -13,7 +13,7 @@
         });
     });
 
-    function showGroups(hostname){
+    function showGroups(hostname){ // shows available groups from selected hostname
         $.ajax({
             url: "./backend/showSmartboxGroup.php",     //makes post request to the url
             method: "POST",
@@ -25,4 +25,43 @@
 
 
     }
+
+    function removePinFromGroup(Pin, Group){  //remove selected pins from selected group
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Remove' to confirm it:");
+        if (confirm === "Remove") {
+            $.ajax({
+                url: "/backend/removePinFromGroup.php",   //sends data over post request
+                method: "POST",
+                data: {removePin: 1, pinNr: Pin, group: Group},
+                success: function (data) {      //on success remove pin from group and reloads page
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Remove got cancelled");
+        }
+    }
+
+    function addPinToGroup(GroupNr){ //show form to add a Pin on selected Group
+        alert("show Pin form for Group: " + GroupNr);
+    }
+
+    function deleteGroup(GroupNr){
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteGroup.php",   //sends data over post request
+                method: "POST",
+                data: {deleteGroup: 1, groupNr: GroupNr},
+                success: function (data) {      //on success deletes group and reloads page
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Remove got cancelled");
+        }
+    }
+
 </script>
