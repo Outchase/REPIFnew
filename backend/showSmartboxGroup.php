@@ -18,13 +18,12 @@ if (isset($_POST['smGr'])){
                 $tempRow = mysqli_fetch_assoc($tempResult);
                 $output .= "<p>".$tempRow['fiPinNr']." <button onclick='removePinFromGroup(".$tempRow['fiPinNr'].",".$row['fiGroupNr'].")'>-</button></p>"; //display the pins with an option to remove the pins from the group
             }
-            $output.= "<button onclick='addPinToGroup(".$row['fiGroupNr'].")'>+</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete Group</button></div>";  // add option to add pins to Group or to delete the Group
+            $output.= "<button onclick=showAddPinToGroup(".$row['fiGroupNr'].",'".$hostname."')>+</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete Group</button></div>";  // add option to add pins to Group or to delete the Group
         }
     } else {
-        $output.= "<li>false</li>";
+        $output.= "<p style='color: red'>There are no groups assign for the selected smartbox. Please create a new Group</p>";
     }
-
-    $output.= "</ul>";
+    $output.="<div id='addOutput'></div>";
     echo $output;
 
     $mysqli->close();

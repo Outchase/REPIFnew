@@ -13,6 +13,10 @@
         });
     });
 
+    function showAvailablePins(){
+        let hostname = $("#availSbList").val();
+        alert(hostname);
+    }
     function showGroups(hostname){ // shows available groups from selected hostname
         $.ajax({
             url: "./backend/showSmartboxGroup.php",     //makes post request to the url
@@ -43,8 +47,28 @@
         }
     }
 
-    function addPinToGroup(GroupNr){ //show form to add a Pin on selected Group
-        alert("show Pin form for Group: " + GroupNr);
+    function showAddPinToGroup(groupNr, hostname){ //show selectbox of output pins to add it on selected Group
+        $.ajax({
+            url: "./backend/showAvailablePins.php",     //makes post request to the url
+            method: "POST",
+            data: {avPin: 1, groupNr: groupNr, hostname: hostname},
+            success: function (data) {      //on success display table for the specific user
+                $("#addOutput").html("<h4>Add new pin to the Group "+ groupNr +":</h4>" + data);
+            }
+        });
+    }
+
+    function addPinToGroup(groupNr,hostname){   //add the selected available pin to the group
+        let pin = $("#availablePins").val();
+        $.ajax({
+            url: "./backend/addPinsToGroup.php",     //makes post request to the url
+            method: "POST",
+            data: {addPin2Group: 1, groupNr: groupNr, pin: pin, hostname: hostname},
+            success: function (data) {      //on success display table for the specific user
+                alert(data);
+                location.reload();
+            }
+        });
     }
 
     function deleteGroup(GroupNr){
@@ -62,6 +86,23 @@
         } else {
             alert("Remove got cancelled");
         }
+    }
+
+    function createGroup(){  //create a new group to add pins in
+        let groupName = $("#inputGroupName").val();
+        let groupDesc = $("#inputGroupDesc").val();
+        let hostname = $("#availSbList").val();
+
+        $.ajax({
+            url: "./backend/createGroup.php",     //makes post request to the url
+            method: "POST",
+            data: {createGroup: 1, groupName: groupName, groupDesc: groupDesc, hostname: hostname},
+            success: function (data) {      //on success display table for the specific user
+                alert(data);
+                location.reload();
+            }
+        });
+
     }
 
 </script>
