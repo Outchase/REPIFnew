@@ -5,7 +5,7 @@ if (isset($_POST['assignToGroup'])){
     $group = $_POST['group'];
     $pin = $_POST['pin'];
 
-    $sql = $mysqli->prepare("INSERT INTO tblAffect (fiGroupNr, fiHostname, fiPinNr) VALUES (?, ?, ?)");       //use prepare statement to insert values in table tblConfigure
+    $sql = $mysqli->prepare("INSERT INTO tblAffect (fiGroupNr, fiHostname, fiPinNr) VALUES (?, ?, ?)");       //use prepare statement to insert values in table tblAffect
     $sql->bind_param('isi', $group, $hostname, $pin);     //bound parameters
     $sql-> execute();       //executes sql
     $sql->close();          //closes sql and database connection

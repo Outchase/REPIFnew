@@ -158,7 +158,7 @@
             url: "./backend/createGroup.php",     //makes post request to the url
             method: "POST",
             data: {createGroup: 1, groupName: groupName, groupDesc: groupDesc},
-            success: function (data) {      //on success display table for the specific user
+            success: function (data) {      //on success display data
                 alert(data);
                 location.reload();
             }
@@ -175,7 +175,7 @@
             url: "./backend/assignAllToGroup.php",     //makes post request to the url
             method: "POST",
             data: {assignToGroup: 1, hostname: hostname, group:group, pin: pin},
-            success: function (data) {      //on success display table for the specific user
+            success: function (data) {      //on success display data
                 alert(data);
             }
         });
