@@ -7,7 +7,6 @@ if (isset($_POST['su'])){
     $userId= $_SESSION["userID"];
 
     $temp = array();               //declares an array
-    $a= array();
 
     $sql = "SELECT * FROM tblConfigure WHERE fiUserNr = '$userId'";         //query that selects all the smarboxes of the giving user from Table tblConfigure
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
@@ -35,7 +34,6 @@ if (isset($_POST['su'])){
             $output="<table><thead><tr><th>Hostname</th><th>Description</th><th>Location</th></tr></thead><tbody>";
             for ($i=0; $i<mysqli_num_rows($result); $i++){
                 $row = mysqli_fetch_assoc($result);
-                array_push($a, $row['idHostname']);
                 $output.= "<tr><td>".$row['idHostname']. "</td><td>" . $row['dtDescription'] . "</td><td>" . $row['dtLocation'] ."</td><td><button onclick=showGroups('".$row['idHostname']."')>Show Groups</button></td></tr>";      //create rows with values that got fetched from the msql result
             }
         } else {
@@ -44,17 +42,7 @@ if (isset($_POST['su'])){
 
 
 
-       $output.= "</tbody></table><div id='groupsContent'></div><h3>Create a new Group:</h3>
-       <form method='post' onsubmit='createGroup()'>
-       <label>Group Name: </label><input id='inputGroupName' type='text' required><br>
-       <label>Description: </label><input id='inputGroupDesc' type='text' required><br>
-       <label>Choose available smartbox: </label><select id='availSbList' onchange='showAvailablePins()'>";
-        for ($i=0; $i<count($temp); $i++){
-            $output.= "<option value='".$a[$i]."'>".$a[$i]."</option>";
-        }
-        $output.= "</select><br>
-       
-       <input type='submit' value='create'></form>";
+       $output.= "</tbody></table><div id='groupsContent'>";
     }else {                                             //else sends message that there are no smartboxes
         $output= "<p>No smartboxes assigned</p>";
     }

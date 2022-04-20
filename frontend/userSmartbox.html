@@ -1,7 +1,25 @@
 <h2>User Smartbox</h2>
 <div id="showSmartbox"></div>
+<div id='groupsContent'></div>
+<div id="createGroupContent">
+<h3>Create a new Group:</h3>
+<form method='post' onsubmit='createGroup()'>
+    <label>Group Name: </label><input id='inputGroupName' type='text' required><br>
+    <label>Description: </label><input id='inputGroupDesc' type='text' required><br>
+    <input type='submit' value='create'></form>
+</div>
+<div id="assignGroupContent">
+    <h3>Assign Smartbox and Pin to a Group:</h3>
+    <form method='post' onsubmit='assignSbAndPinToGroup()' id="sbAndPinToGroup">
+        <label>Choose available group: </label><select id='availableNewGroupList' onchange="showAvailablePins()" required></select><br>
+        <label>Choose smartbox: </label><select id='availableSbList' onchange='showAvailablePins()' required></select><br>
+        <label>Choose available Pin: <select id='availblePins' required></select></label><br>
+        <input type='submit' value='assign'><br>
+        <label id="pinResponse" style="color: red"></label>
+    </form>
+</div>
 <script>
-    $(document).ready(function (){          //when document is ready
+    $(document).ready(function () {          //when document is ready
 
         $.ajax({
             url: "./backend/showSmartboxTable.php",     //makes post request to the url
@@ -10,14 +28,60 @@
             success: function (data) {      //on success display table for the specific user
                 $("#showSmartbox").html(data);
             }
-        });
+        }); //shows the smartbox Tables
+
+        $.ajax({
+            url: "./backend/showAvailableGroup.php",     //makes post request to the url
+            method: "POST",
+            data: {showGroup: 1},
+            success: function (data) {      //on success display table for the specific user
+                if (data=== "error"){
+                    $("#sbAndPinToGroup").html("No groups available. Please create a new Group.");
+                }else {
+                    $("#availableNewGroupList").html(data);
+                }
+            }
+        }); //shows unassigned Groups
+
+        $.ajax({
+            url: "./backend/showAvailableSb.php",     //makes post request to the url
+            method: "POST",
+            data: {showAvailableSb: 1},
+            success: function (data) {      //on success display table for the specific user
+                if (data=== "error"){
+                    $("#sbAndPinToGroup").html("No Smartbox Available.");
+                }else {
+                    $("#availableSbList").html(data);
+                    showAvailablePins();
+                }
+            }/*,
+            complete: function (){
+                alert($("#availableSbList").val());
+            }*/
+        }); //shows available smartboxes
+
     });
 
-    function showAvailablePins(){
-        let hostname = $("#availSbList").val();
-        alert(hostname);
+    function showAvailablePins() {
+        let hostname = $("#availableSbList").val();
+        //let group = $("#availableNewGroupList").val();
+
+        $.ajax({
+            url: "./backend/showAvailablePins.php",     //makes post request to the url
+            method: "POST",
+            data: {avPin: 1, hostname: hostname},
+            success: function (data) {      //on success display table for the specific user
+                if (data==="error"){
+                    $("#pinResponse").html("No pins for "+hostname+" available. Contact Technician");
+                } else {
+                    $("#pinResponse").html("<label id='pinResponse' style='color: red'></label>");
+                }
+                    $("#availblePins").html(data);
+            }
+        }); //shows avaialble pins
     }
-    function showGroups(hostname){ // shows available groups from selected hostname
+
+    function showGroups(hostname) { // shows available groups from selected hostname
         $.ajax({
             url: "./backend/showSmartboxGroup.php",     //makes post request to the url
             method: "POST",
@@ -26,17 +90,15 @@
                 $("#groupsContent").html(data);
             }
         });
-
-
     }
 
-    function removePinFromGroup(Pin, Group){  //remove selected pins from selected group
+    function removePinFromGroup(Pin, Group, hostname) {  //remove selected pins from selected group
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Remove' to confirm it:");
         if (confirm === "Remove") {
             $.ajax({
                 url: "/backend/removePinFromGroup.php",   //sends data over post request
                 method: "POST",
-                data: {removePin: 1, pinNr: Pin, group: Group},
+                data: {removePin: 1, pinNr: Pin, group: Group, hostname:hostname},
                 success: function (data) {      //on success remove pin from group and reloads page
                     alert(data);
                     location.reload();
@@ -47,18 +109,18 @@
         }
     }
 
-    function showAddPinToGroup(groupNr, hostname){ //show selectbox of output pins to add it on selected Group
+    function showAddPinToGroup(groupNr, hostname) { //show selectbox of output pins to add it on selected Group
         $.ajax({
             url: "./backend/showAvailablePins.php",     //makes post request to the url
             method: "POST",
-            data: {avPin: 1, groupNr: groupNr, hostname: hostname},
+            data: {avPin: 1, hostname: hostname},
             success: function (data) {      //on success display table for the specific user
-                $("#addOutput").html("<h4>Add new pin to the Group "+ groupNr +":</h4>" + data);
+                $("#addOutput").html("<h4>Add new pin to the Group " + groupNr + ":</h4><select id='availablePins'>" + data + "</select><button onclick=addPinToGroup(" + groupNr + ",'" + hostname + "')>Add Pin to Group</button>");
             }
         });
     }
 
-    function addPinToGroup(groupNr,hostname){   //add the selected available pin to the group
+    function addPinToGroup(groupNr, hostname) {   //add the selected available pin to the group
         let pin = $("#availablePins").val();
         $.ajax({
             url: "./backend/addPinsToGroup.php",     //makes post request to the url
@@ -71,7 +133,7 @@
         });
     }
 
-    function deleteGroup(GroupNr){
+    function deleteGroup(GroupNr) {
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
@@ -88,21 +150,35 @@
         }
     }
 
-    function createGroup(){  //create a new group to add pins in
+    function createGroup() {  //create a new group to add pins in
         let groupName = $("#inputGroupName").val();
         let groupDesc = $("#inputGroupDesc").val();
-        let hostname = $("#availSbList").val();
 
         $.ajax({
             url: "./backend/createGroup.php",     //makes post request to the url
             method: "POST",
-            data: {createGroup: 1, groupName: groupName, groupDesc: groupDesc, hostname: hostname},
+            data: {createGroup: 1, groupName: groupName, groupDesc: groupDesc},
             success: function (data) {      //on success display table for the specific user
                 alert(data);
                 location.reload();
             }
         });
 
+    }
+
+    function assignSbAndPinToGroup(){
+        let hostname = $("#availableSbList").val();
+        let group = $("#availableNewGroupList").val();
+        let pin = $("#availblePins").val();
+
+        $.ajax({
+            url: "./backend/assignAllToGroup.php",     //makes post request to the url
+            method: "POST",
+            data: {assignToGroup: 1, hostname: hostname, group:group, pin: pin},
+            success: function (data) {      //on success display table for the specific user
+                alert(data);
+            }
+        });
     }
 
 </script>
