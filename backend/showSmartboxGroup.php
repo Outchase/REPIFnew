@@ -22,10 +22,11 @@ if (isset($_POST['smGr'])){
             }
             $output.= "<button onclick=showAddPinToGroup(".$row['fiGroupNr'].",'".$hostname."')>+</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete Group</button></div>";  // add option to add pins to Group or to delete the Group
         }
+        $output.="<div id='addOutput'></div>";
     } else {
-        $output.= "<p style='color: red'>There are no groups assign for the selected smartbox. Please create a new Group</p>";
+        $output= "error";
     }
-    $output.="<div id='addOutput'></div>";
+
     echo $output;
 
     $mysqli->close();

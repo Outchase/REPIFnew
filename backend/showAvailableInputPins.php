@@ -1,13 +1,12 @@
 <?php
-if (isset($_POST['avPin'])){
+if (isset($_POST['showInputPins'])){
     include_once "sqlConnect.inc";      //connects to the database
-    $hostname = $_POST['hostname'];
-    $output = "";
+    $hostname= $_POST['hostname'];
+    $output ="";
 
-    $sql= "SELECT tblPin.idPinNr, tblPin.dtInputOrOutput FROM tblPin 
-    LEFT JOIN tblAffect ON tblAffect.fiPinNr=tblPin.idPinNr AND tblAffect.fiHostname=tblPin.fiHostname
-    WHERE tblAffect.fiPinNr IS NULL and tblPin.fiHostname='$hostname' AND tblPin.dtInputOrOutput=0";   //query that selects the pins which are not assigned to a group from selected hostname
-
+    $sql= "SELECT tblPin.idPinNr FROM tblPin 
+    LEFT JOIN tblEvent on tblEvent.fiPinNr=tblPin.idPinNr
+    WHERE tblEvent.fiPinNr IS NULL AND tblPin.fiHostname='$hostname' AND tblPin.dtInputOrOutput=1";     //query that display Input pins which are not assigned in tblEvent
 
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
 
@@ -18,7 +17,7 @@ if (isset($_POST['avPin'])){
         }
 
     } else {
-      $output= "error";
+        $output= "error";
     }
     echo $output;
     $mysqli->close();
