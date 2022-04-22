@@ -136,7 +136,7 @@
         });
     }
 
-    function deleteGroup(GroupNr) {
+    function deleteGroup(GroupNr) {     //delete group from selected group id
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
@@ -149,7 +149,7 @@
                 }
             });
         } else {
-            alert("Remove got cancelled");
+            alert("Delete got cancelled");
         }
     }
 
@@ -248,6 +248,84 @@
                 }
             }
         });
+    }
+
+    function editGroup(groupNr){    //displays form to edit Group
+        $.ajax({
+            url: "./backend/showGroupEdit.php",     //makes post request to the url
+            method: "POST",
+            data: {showGroupEdit: 1, groupNr: groupNr},
+            success: function (data) {      //on success displays edit Groué
+                $("#group"+groupNr).html(data);
+            }
+        });
+
+    }
+
+    function updateGroup(groupNr){  //update group information
+        let groupName= $("#inputGroupName"+groupNr).val();
+        let groupDesc= $("#inputGroupDesc"+groupNr).val();
+        if (groupName.length > 0 && groupDesc.length > 0){
+            $.ajax({
+                url: "./backend/updateGroup.php",     //makes post request to the url
+                method: "POST",
+                data: {updateGroup: 1, groupNr: groupNr, groupName: groupName, groupDesc: groupDesc},
+                success: function (data) {      //on success displays message
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Values are empty");
+        }
+
+    }
+
+    function showEditEvent(eventCode,hostname, pinNr){  //displays form to edit Events
+        $.ajax({
+            url: "./backend/showEditEvent.php",     //makes post request to the url
+            method: "POST",
+            data: {showEditEvent: 1, eventCode: eventCode, hostname: hostname, pinNr: pinNr},
+            success: function (data) {      //on success displays edit events
+                $("#editEvent").html(data);
+            }
+        });
+    }
+
+    function updateEvent(eventCode, hostname, pinNr){   //update group information
+        let code= $("#inputEventCode"+eventCode+hostname+pinNr).val().toUpperCase();
+        let eventDesc= $("#inputEventDesc"+eventCode+hostname+pinNr).val();
+
+        if (code.length > 0 && eventDesc.length > 0) {
+            $.ajax({
+                url: "./backend/updateEvent.php",     //makes post request to the url
+                method: "POST",
+                data: {updateEvent: 1, code: code, eventDesc: eventDesc, hostname: hostname, pinNr: pinNr},
+                success: function (data) {      //on success displays message
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else{
+            alert("Values are empty");
+        }
+    }
+
+    function deleteEvent(eventCode, hostname, pinNr){   //delete event from selected event code, hostname and pin
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteEvent.php",   //sends data over post request
+                method: "POST",
+                data: {deleteEvent: 1, eventCode: eventCode, hostname: hostname, pinNr: pinNr},
+                success: function (data) {      //on success deletes group and reloads page
+                    alert(data);
+                    location.reload();
+                }
+            });
+        }else {
+            alert("Delete got cancelled");
+        }
     }
 
 </script>
