@@ -34,7 +34,7 @@ if (isset($_POST['su'])){
             $output="<table><thead><tr><th>Hostname</th><th>Description</th><th>Location</th></tr></thead><tbody>";
             for ($i=0; $i<mysqli_num_rows($result); $i++){
                 $row = mysqli_fetch_assoc($result);
-                $output.= "<tr><td>".$row['idHostname']. "</td><td>" . $row['dtDescription'] . "</td><td>" . $row['dtLocation'] ."</td><td><button onclick=showGroups('".$row['idHostname']."')>Show Groups</button></td><td><button onclick=checkAffects('".$row['idHostname']."')>Show Events</button></td></tr>";      //create rows with values that got fetched from the msql result
+                $output.= "<tr><td>".$row['idHostname']. "</td><td>" . $row['dtDescription'] . "</td><td>" . $row['dtLocation'] ."</td><td><button onclick=showGroups('".$row['idHostname']."')>Show Groups</button></td><td><button onclick=checkAffects('".$row['idHostname']."')>Show Events</button></td><td><button onclick=showExecuteSwitch('".$row['idHostname']."')>Show Switches</button></td></tr>";      //create rows with values that got fetched from the msql result
             }
         } else {
             $output = "false";              // error if there are no results

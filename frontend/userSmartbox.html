@@ -206,20 +206,19 @@
             data: {showEvent: 1, hostname: hostname},
             success: function (data) {      //on success display events for the specific SB
                 $("#groupsContent").html(data);
-            }, complete: function (){
                 $("#groupsContent").append("<h3>Create a new event:</h3>" +
-                    "<form id='createEventForm' method='post' onsubmit=createEvent2('"+ hostname+"')>" +
+                    "<form id='createEventForm' method='post' onsubmit=createEvent('"+hostname+"')>" +
                     "<label>Event Code: </label><input id='eventCode' type='text' maxlength='1' required><br>" +
                     "<label>Description: </label><input id='eventDesc' type='text' required><br>" +
                     "<label>Chose available Pin: </label><select required id='eventPin'></select><br>" +
                     "<input type='submit' value='create'>" +
-                    "</form>");
+                    "</form id='createEventForm'>");
                 showAvailableInputPins(hostname);
             }
         });
     }
 
-    function createEvent2(hostname){     //create new events
+    function createEvent(hostname){     //create new events
 
         let eventCode = $("#eventCode").val().toUpperCase();
         let eventDesc= $("#eventDesc").val();
@@ -229,7 +228,7 @@
             url: "./backend/createEvent.php",     //makes post request to the url
             method: "POST",
             data: {createEvent: 1, hostname: hostname, eventCode: eventCode, eventDesc: eventDesc, eventPin: eventPin},
-            success: function (data) {      //on success displays pins
+            success: function (data) {      //on success reload page
                 alert(data);
             }
         });
@@ -326,6 +325,41 @@
         }else {
             alert("Delete got cancelled");
         }
+    }
+
+    function showExecuteSwitch(hostname){ //display table of Switches
+        $.ajax({
+            url: "./backend/showSwitchTable.php",     //makes post request to the url
+            method: "POST",
+            data: {showSwitchTable: 1, hostname: hostname},
+            success: function (data) {      //on success displays edit events
+                $("#groupsContent").html(data);
+                if (data === "error"){
+                    $("#groupsContent").html("<p style='color: red'>No switches assigned for "+ hostname+"</p>");
+                }else {
+                    $("#groupsContent").html(data);
+                }
+                $("#groupsContent").append("<h3>Assign event and group to switch:</h3>");
+                showAssignedSwitch(hostname);
+
+            }
+        });
+    }
+
+    function showAssignedSwitch(hostname){
+        $.ajax({
+            url: "./backend/showAssignSwitch.php",     //makes post request to the url
+            method: "POST",
+            data: {showAssignSwitch: 1, hostname: hostname},
+            success: function (data) {      //on success displays edit events
+               if(data === "exist"){
+                   $("#groupsContent").append("show Form");
+               }else {
+                   $("#groupsContent").append("<p style='color: red'>Event or group is not assign to "+hostname+". Please verify it.</p>");
+               }
+                   alert(data);
+            }
+        });
     }
 
 </script>
