@@ -9,6 +9,8 @@ if (isset($_POST['showAssignSwitch'])){
 
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
         echo "exist";
+    } else {
+        echo "error";
     }
     $mysqli->close();
 }

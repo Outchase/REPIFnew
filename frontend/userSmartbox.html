@@ -1,6 +1,5 @@
 <h2>User Smartbox</h2>
 <div id="showSmartbox"></div>
-<div id='groupsContent'></div>
 <div id="createGroupContent">
     <h3>Create a new group:</h3>
     <form method='post' onsubmit='createGroup()'>
@@ -96,7 +95,7 @@
     }
 
     function removePinFromGroup(Pin, Group, hostname) {  //remove selected pins from selected group
-        let confirm = prompt("Are you sure you want to make those changes?\nType 'Remove' to confirm it:");
+        let confirm = prompt("Are you sure you want to remove it?\nType 'Remove' to confirm it:");
         if (confirm === "Remove") {
             $.ajax({
                 url: "/backend/removePinFromGroup.php",   //sends data over post request
@@ -137,7 +136,7 @@
     }
 
     function deleteGroup(GroupNr) {     //delete group from selected group id
-        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        let confirm = prompt("Are you sure you want to delete it?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
                 url: "/backend/deleteGroup.php",   //sends data over post request
@@ -207,19 +206,18 @@
             success: function (data) {      //on success display events for the specific SB
                 $("#groupsContent").html(data);
                 $("#groupsContent").append("<h3>Create a new event:</h3>" +
-                    "<form id='createEventForm' method='post' onsubmit=createEvent('"+hostname+"')>" +
+                    "<form id='createEventForm' method='post' onsubmit=eventCreate('"+hostname+"')>" +
                     "<label>Event Code: </label><input id='eventCode' type='text' maxlength='1' required><br>" +
                     "<label>Description: </label><input id='eventDesc' type='text' required><br>" +
                     "<label>Chose available Pin: </label><select required id='eventPin'></select><br>" +
-                    "<input type='submit' value='create'>" +
-                    "</form id='createEventForm'>");
+                    "<input type='submit' value='Create'>"+
+                    "</form>");
                 showAvailableInputPins(hostname);
             }
         });
     }
 
-    function createEvent(hostname){     //create new events
-
+    function eventCreate(hostname){
         let eventCode = $("#eventCode").val().toUpperCase();
         let eventDesc= $("#eventDesc").val();
         let eventPin= $("#eventPin").val();
@@ -228,10 +226,11 @@
             url: "./backend/createEvent.php",     //makes post request to the url
             method: "POST",
             data: {createEvent: 1, hostname: hostname, eventCode: eventCode, eventDesc: eventDesc, eventPin: eventPin},
-            success: function (data) {      //on success reload page
-                alert(data);
+            success: function (data) {      //on success displays create new event
+                alert(data)
             }
         });
+
     }
 
     function showAvailableInputPins(hostname){ //show available input pins from selected SB
@@ -311,7 +310,7 @@
     }
 
     function deleteEvent(eventCode, hostname, pinNr){   //delete event from selected event code, hostname and pin
-        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        let confirm = prompt("Are you sure you want to delete it?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
                 url: "/backend/deleteEvent.php",   //sends data over post request
@@ -353,13 +352,138 @@
             data: {showAssignSwitch: 1, hostname: hostname},
             success: function (data) {      //on success displays edit events
                if(data === "exist"){
-                   $("#groupsContent").append("show Form");
+                   $("#groupsContent").append("<form id='switchAssignment' method='post' onsubmit=assignExecuteSwitch('"+hostname+"')><label>Function Code: </label>" +
+                       "<select id='assignFuncCode' required><option value='A'>A</option><option value='E'>E</option><option value='U'>U</option></select><br>" +
+                       "<label>Description: </label><input type='text' id='assignDesc' required><br>" +
+                       "<label>Sequence number: </label><input id='assignSeq' type='number'><br>" +
+                       "<label>Delay: </label><input type='number' id='assignDelay'><br>" +
+                       "<label>Event Code: </label><select id='assignEventCode' onchange=showPinsAvailableEvent('"+hostname+"') required></select><br>" +
+                       "<label>Pin number: </label><select id='assignPinNr' required></select><br>" +
+                       "<label>Group number: </label><select id='assignGroupNr' required></select><br>" +
+                       "<input type='submit' value='Assign'>" +
+                       "</form>");
+
+                        showGroupNumber(hostname);
+                        showAvailableEventCode(hostname);
                }else {
                    $("#groupsContent").append("<p style='color: red'>Event or group is not assign to "+hostname+". Please verify it.</p>");
                }
-                   alert(data);
             }
         });
+    }
+
+    function assignExecuteSwitch(hostname){     //assign values to the list of switches
+        let assignFuncCode= $("#assignFuncCode").val();
+        let assignDesc= $("#assignDesc").val();
+        let assignSeq= $("#assignSeq").val();
+        let assignDelay= $("#assignDelay").val();
+        let assignEventCode= $("#assignEventCode").val();
+        let assignPinNr= $("#assignPinNr").val();
+        let assignGroupNr= $("#assignGroupNr").val();
+
+
+        if (assignFuncCode === "A" || assignFuncCode === "E" || assignFuncCode === "U" ){
+            $.ajax({
+                url: "./backend/assignExecuteSwitch.php",   //sends data over post request
+                method: "POST",
+                data: {assignExecuteSwitch: 1, assignFuncCode: assignFuncCode, assignDesc: assignDesc, assignSeq: assignSeq, assignDelay: assignDelay, assignEventCode: assignEventCode, assignPinNr: assignPinNr, hostname: hostname, assignGroupNr: assignGroupNr},
+                success: function (data) {      //on success display values
+                    alert(data);
+                }
+            });
+        }
+    }
+
+    function showAvailableEventCode(hostname){      //show available event codes
+        $.ajax({
+            url: "./backend/showAvailableEventCode.php",   //sends data over post request
+            method: "POST",
+            data: {showAvailableEventCode: 1, hostname: hostname},
+            success: function (data) {      //on success display values
+                if (data==="error"){
+                    $("#switchAssignment").html("<p style='color: red'>There are no event codes available.</p>");
+                } else{
+                    $("#assignEventCode").html(data);
+                    showPinsAvailableEvent(hostname);
+                }
+            }
+        });
+    }
+
+    function showGroupNumber(hostname){
+        $.ajax({
+            url: "./backend/showAvailableGroupNumber.php",   //sends data over post request
+            method: "POST",
+            data: {showAvailableGroupNumber: 1, hostname: hostname},
+            success: function (data) {      //on success display values
+                if (data==="error"){
+                    $("#switchAssignment").html("<p style='color: red'>There are no group available.</p>");
+                } else{
+                    $("#assignGroupNr").html(data);
+                }
+            }
+        });
+    }
+
+    function showPinsAvailableEvent(hostname){      //show available Pins from event code
+        let eventCode= $("#assignEventCode").val();
+
+        $.ajax({
+            url: "./backend/showAvailableEventPins.php",   //sends data over post request
+            method: "POST",
+            data: {showAvailableEventPins: 1, hostname: hostname, eventCode: eventCode},
+            success: function (data) {      //on success display values
+                if (data==="error"){
+                    $("#assignPinNr").html("<p style='color: red'>There are no Pins available.</p>");
+                } else{
+                    $("#assignPinNr").html(data);
+                }
+            }
+        });
+    }
+
+    function showSwitchEdit(functionsCode, hostname, eventCode, pinNr, groupNr){
+        $.ajax({
+            url: "./backend/showSwitchEdit.php",     //makes post request to the url
+            method: "POST",
+            data: {showSwitchEdit: 1, functionsCode: functionsCode, hostname: hostname, eventCode: eventCode, pinNr: pinNr, groupNr: groupNr},
+            success: function (data) {      //on success displays edit events
+               $("#switchEditContent").html(data);
+            }
+        });
+    }
+
+    function updateSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){
+        let editSwitchDesc= $("#editSwitchDesc").val();
+        let editSwitchSeq= $("#editSwitchSeq").val();
+        let editSwitchDelay= $("#editSwitchDelay").val();
+
+        $.ajax({
+            url: "./backend/updateSwitch.php",     //makes post request to the url
+            method: "POST",
+            data: {switchUpdate: 1, editSwitchDesc: editSwitchDesc, editSwitchSeq: editSwitchSeq, editSwitchDelay: editSwitchDelay, functionsCode: functionsCode, hostname: hostname, eventCode: eventCode, pinNr: pinNr, groupNr: groupNr},
+            success: function (data) {      //on success displays message
+                alert(data);
+                location.reload();
+            }
+        });
+    }
+
+    function deleteSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){
+        let confirm = prompt("Are you sure you want to delete it?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteSwitch.php",   //sends data over post request
+                method: "POST",
+                data: {deleteSwitch: 1, functionsCode: functionsCode, hostname: hostname, eventCode: eventCode, pinNr: pinNr, groupNr: groupNr},
+                success: function (data) {      //on success deletes group and reloads page
+                    alert(data);
+                    location.reload();
+                }
+            });
+        }else {
+            alert("Delete got cancelled");
+        }
     }
 
 </script>

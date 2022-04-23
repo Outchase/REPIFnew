@@ -5,7 +5,7 @@ if (isset($_POST['showInputPins'])){
     $output ="";
 
     $sql= "SELECT tblPin.idPinNr FROM tblPin 
-    LEFT JOIN tblEvent on tblEvent.fiHostname=tblPin.fiHostname
+    LEFT JOIN tblEvent on tblEvent.fiHostname=tblPin.fiHostname AND tblEvent.fiPinNr=tblPin.idPinNr
     WHERE tblEvent.fiPinNr IS NULL AND tblPin.fiHostname='$hostname' AND tblPin.dtInputOrOutput=1";     //query that display Input pins which are not assigned in tblEvent
 
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
