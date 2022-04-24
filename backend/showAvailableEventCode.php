@@ -6,7 +6,7 @@ if (isset($_POST['showAvailableEventCode'])) {
     $output="";
 
     $sql = "SELECT tblEvent.idEventCode FROM tblEvent
-    LEFT JOIN tblExecuteTheSwitch ON tblExecuteTheSwitch.fiEventCode=tblEvent.idEventCode 
+    LEFT JOIN tblExecuteTheSwitch ON tblExecuteTheSwitch.fiHostname=tblEvent.fiHostname 
     WHERE tblEvent.fiHostname = '$hostname' AND tblExecuteTheSwitch.fiEventCode IS NULL GROUP BY idEventCode";         //query that selects all the smarboxes of the giving user from Table tblConfigure
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
 

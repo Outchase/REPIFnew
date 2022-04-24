@@ -20,7 +20,7 @@ if (isset($_POST['smGr'])){
                 $tempRow = mysqli_fetch_assoc($tempResult);
                 $output .= "<p>".$tempRow['fiPinNr']." <button onclick=removePinFromGroup(".$tempRow['fiPinNr'].",".$row['fiGroupNr'].",'".$hostname."')>-</button></p>"; //display the pins with an option to remove the pins from the group
             }
-            $output.= "<button onclick=showAddPinToGroup(".$row['fiGroupNr'].",'".$hostname."')>+</button><br><button onclick='editGroup(".$row['fiGroupNr'].")'>Edit Group</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete Group</button></div>";  // add option to add pins to Group or to delete the Group
+            $output.= "<button onclick=showAddPinToGroup(".$row['fiGroupNr'].",'".$hostname."')>+</button><div id='assignScriptForm".$row['fiGroupNr']."'></div><button onclick='assignScript(".$row['fiGroupNr'].")'>Assign script</button><button onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></div>";  // add option to add pins to Group or to delete the Group
         }
         $output.="<div id='addOutput'></div>";
     } else {

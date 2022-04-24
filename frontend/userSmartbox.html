@@ -60,9 +60,8 @@
 
     });
 
-    function showAvailablePins() {
+    function showAvailablePins() {      //shows avaialble pins
         let hostname = $("#availableSbList").val();
-        //let group = $("#availableNewGroupList").val();
 
         $.ajax({
             url: "./backend/showAvailablePins.php",     //makes post request to the url
@@ -76,7 +75,7 @@
                 }
                 $("#availblePins").html(data);
             }
-        }); //shows avaialble pins
+        });
     }
 
     function showGroups(hostname) { // shows available groups from selected hostname
@@ -90,6 +89,31 @@
                 } else {
                     $("#groupsContent").html(data);
                 }
+            }
+        });
+    }
+
+    function assignScript(groupNr){     //show assignScript form
+        $.ajax({
+            url: "./backend/showScripts.php",     //makes post request to the url
+            method: "POST",
+            data: {showScripts: 1},
+            success: function (data) {      //on success display data
+               $("#assignScriptForm"+groupNr).html("<label>Select script: </label><select id='availScript'>"+data+"</select><button onclick='useScript("+groupNr+")'>Assign</button>");
+            }
+        });
+    }
+
+    function useScript(groupNr){    //assign Script with group
+       let scriptName=$("#availScript").val();
+
+        $.ajax({
+            url: "./backend/useScript.php",     //makes post request to the url
+            method: "POST",
+            data: {useScript: 1, groupNr: groupNr, scriptName: scriptName},
+            success: function (data) {      //on success display data
+                alert(data);
+                location.reload();
             }
         });
     }
@@ -168,7 +192,7 @@
 
     }
 
-    function assignSbAndPinToGroup() {
+    function assignSbAndPinToGroup() {      //connect pin to group
         let hostname = $("#availableSbList").val();
         let group = $("#availableNewGroupList").val();
         let pin = $("#availblePins").val();
@@ -207,7 +231,7 @@
                 $("#groupsContent").html(data);
                 $("#groupsContent").append("<h3>Create a new event:</h3>" +
                     "<form id='createEventForm' method='post' onsubmit=eventCreate('"+hostname+"')>" +
-                    "<label>Event Code: </label><input id='eventCode' type='text' maxlength='1' required><br>" +
+                    "<label>Event Code: </label><select id='eventCode' required><option value='K'>K</option><option value='L'>L</option></select><br>" +
                     "<label>Description: </label><input id='eventDesc' type='text' required><br>" +
                     "<label>Chose available Pin: </label><select required id='eventPin'></select><br>" +
                     "<input type='submit' value='Create'>"+
@@ -217,7 +241,7 @@
         });
     }
 
-    function eventCreate(hostname){
+    function eventCreate(hostname){     //create new Events
         let eventCode = $("#eventCode").val().toUpperCase();
         let eventDesc= $("#eventDesc").val();
         let eventPin= $("#eventPin").val();
@@ -345,7 +369,7 @@
         });
     }
 
-    function showAssignedSwitch(hostname){
+    function showAssignedSwitch(hostname){      //Show assigned Switches
         $.ajax({
             url: "./backend/showAssignSwitch.php",     //makes post request to the url
             method: "POST",
@@ -410,7 +434,7 @@
         });
     }
 
-    function showGroupNumber(hostname){
+    function showGroupNumber(hostname){         //show available groups
         $.ajax({
             url: "./backend/showAvailableGroupNumber.php",   //sends data over post request
             method: "POST",
@@ -425,7 +449,7 @@
         });
     }
 
-    function showPinsAvailableEvent(hostname){      //show available Pins from event code
+    function showPinsAvailableEvent(hostname){      //show available events
         let eventCode= $("#assignEventCode").val();
 
         $.ajax({
@@ -442,7 +466,7 @@
         });
     }
 
-    function showSwitchEdit(functionsCode, hostname, eventCode, pinNr, groupNr){
+    function showSwitchEdit(functionsCode, hostname, eventCode, pinNr, groupNr){    //display form to edit
         $.ajax({
             url: "./backend/showSwitchEdit.php",     //makes post request to the url
             method: "POST",
@@ -453,7 +477,7 @@
         });
     }
 
-    function updateSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){
+    function updateSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){  // change values fromSwitch
         let editSwitchDesc= $("#editSwitchDesc").val();
         let editSwitchSeq= $("#editSwitchSeq").val();
         let editSwitchDelay= $("#editSwitchDelay").val();
@@ -469,7 +493,7 @@
         });
     }
 
-    function deleteSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){
+    function deleteSwitch(functionsCode, hostname, eventCode, pinNr, groupNr){      //delete the selected switch
         let confirm = prompt("Are you sure you want to delete it?\nType 'Delete' to confirm it:");
         if (confirm === "Delete") {
             $.ajax({
@@ -484,6 +508,33 @@
         }else {
             alert("Delete got cancelled");
         }
+    }
+
+    function executeScript(hostname){       //create the 1 script
+        $.ajax({
+            url: "/backend/createScript.php",   //sends data over post request
+            method: "POST",
+            data: {executeScript: 1, hostname: hostname},
+            success: function (data) {      //on success deletes group and reloads page
+                if (data==="ok"){
+                    executeNextScript(hostname);
+                } else {
+                    alert(data);
+                }
+            }
+        });
+    }
+
+    function executeNextScript(hostname){       //when 1st created Script was a success then create next Script
+        $.ajax({
+            url: "/backend/createNextScript.php",   //sends data over post request
+            method: "POST",
+            data: {executeNextScript: 1, hostname: hostname},
+            success: function (data) {      //on success display message and reloads page
+                alert(data);
+                location.reload();
+            }
+        });
     }
 
 </script>
