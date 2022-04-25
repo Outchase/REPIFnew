@@ -3,10 +3,10 @@ if (isset($_POST['showAvailableEventPins'])) {
     include_once "sqlConnect.inc";      //connects to the database
 
     $hostname= $_POST['hostname'];
-    $eventCode=$_POST['eventCode'];
+    $pinNr=$_POST['pinNr'];
     $output="";
 
-    $sql = "SELECT fiPinNr from tblEvent where idEventCode='$eventCode' and fiHostname='$hostname'";         //query that selects all the smarboxes of the giving user from Table tblConfigure
+    $sql = "SELECT fiPinNr from tblEvent where fiPinNr='$pinNr' and fiHostname='$hostname'";         //query that selects all the smarboxes of the giving user from Table tblConfigure
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
 
 

@@ -450,12 +450,12 @@
     }
 
     function showPinsAvailableEvent(hostname){      //show available events
-        let eventCode= $("#assignEventCode").val();
+        let pinNr= $("#assignEventCode").val();
 
         $.ajax({
             url: "./backend/showAvailableEventPins.php",   //sends data over post request
             method: "POST",
-            data: {showAvailableEventPins: 1, hostname: hostname, eventCode: eventCode},
+            data: {showAvailableEventPins: 1, hostname: hostname, pinNr: pinNr},
             success: function (data) {      //on success display values
                 if (data==="error"){
                     $("#assignPinNr").html("<p style='color: red'>There are no Pins available.</p>");
