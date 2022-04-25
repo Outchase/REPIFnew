@@ -36,7 +36,7 @@ if (isset($_POST['executeScript'])){
             mkdir($directory, 0777, true);
         }
 
-        $myfile = fopen($directory."/gl.txt", "w+") or die("Unable to open file!");
+        $myfile = fopen($directory."/gl.txt", 'w+') or die("Unable to open file!");
         fwrite($myfile, $output);
         fclose($myfile);
 
