@@ -62,6 +62,8 @@ if ($_SESSION["technician"] === "1") {                  //check if logged user i
             include_once "./frontend/UM.html";             //replace in div element with id output with User management page
         } else if ($_GET['page'] === "SM") {                   //check if Get page has the value SM
             include_once "./frontend/SM.html";           //replace in div output the content with Smartbox management page
+        }else if ($_GET['page'] === "scriptPage") {                   //check if Get page has the value SM
+            include_once "./frontend/scriptPage.html";           //replace in div output the content with Smartbox management page
         } else {
             include_once "./backend/welcome.php";
         }

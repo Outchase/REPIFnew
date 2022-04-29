@@ -10,17 +10,6 @@
         <input type="submit" value="Submit">
     </form>
 </div>
-<div id="SMfileUplad">
-    <h2>Upload Script:</h2>
-    <form method="post" onsubmit="uploadFile()" enctype="multipart/form-data" id="fileForm">
-        <label>FileName: </label><input id="fileName" type="text" name="fileName" required><br>
-        <label>File Description: </label><input id="fileDesc" type="text" name="fileDesc" required><br>
-        <label>Choose a smartbox: </label><select id="sbList" required name="hostname"></select><br>
-        <input id="uploadScript" type="file" accept="*" name="uploadScript" value="upload file"required><br>
-        <input type="submit" value="Upload" required>
-        <input type="button" value="Cancel" onclick="cancelUpload()">
-    </form>
-</div>
 <script>
     $(document).ready(function () {         //execute this function when decument is ready
         $.get("/backend/getSmartboxList.php", function (data){ //send a Get request on the specific par
@@ -66,26 +55,6 @@
             }
         });
     });
-
-    function cancelUpload(){        //reloads page when pressing the cancel button in Upload Scripts
-        location.reload();
-    }
-
-    function uploadFile(){              //get values from upload file Form and send with ajax a Post request to the server
-        let form = $("#fileForm")[0];
-        $.ajax({
-            url: "/backend/uploadScripts.php",
-            method: "POST",
-            data: new FormData(form),
-            contentType: false,
-            cache: false,
-            processData:false,
-            success: function (data) {  //on success a message will display
-                alert(data);
-            }
-        });
-
-    }
 
     function addPins(SMHostname) {      //adds a row to insert values for a new pin
         $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td><input type='button' value='+' onclick=insertPins('" + SMHostname + "')></td>");
@@ -166,8 +135,6 @@
             pinsInOut = 0;
         }
         if (pinsDescription.startsWith("GPIO") && pinsDescription.length > 4 && pinsDescription.length < 7) {   //checks samrtbox description start with GPIO and if the length is between 4 and 7
-            let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-            if (confirm === "Confirm") {        //on confirm perform a post request to the selected url
                 $.ajax({
                     url: "/backend/updatePins.php",
                     method: "POST",
@@ -183,9 +150,6 @@
                         location.reload();
                     }
                 });
-            } else {
-                alert("Update got cancelled");
-            }
         } else {
             alert("Invalid values");
         }

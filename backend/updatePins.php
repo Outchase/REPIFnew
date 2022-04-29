@@ -1,5 +1,5 @@
 <?php
-if (isset($_POST['updateGroup'])) {
+if (isset($_POST['updatePin'])) {
     include_once "sqlConnect.inc";      //connects to database
     $pinsDesc = $_POST['pinsDesc'];
     $pinsInOut = $_POST['pinsInOut'];

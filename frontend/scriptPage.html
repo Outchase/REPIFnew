@@ -1,0 +1,81 @@
+<h2>Script Management</h2>
+<div id="scriptContent"></div>
+<div id="SMfileUplad">
+    <h2>Upload Script:</h2>
+    <form method="post" onsubmit="uploadFile()" enctype="multipart/form-data" id="fileForm">
+        <label>FileName: </label><input id="fileName" type="text" name="fileName" required><br>
+        <label>File Description: </label><input id="fileDesc" type="text" name="fileDesc" required><br>
+        <input id="uploadScript" type="file" accept="*" name="uploadScript" value="upload file"required><br>
+        <input type="submit" value="Upload" required>
+        <input type="button" value="Cancel" onclick="cancelUpload()">
+    </form>
+</div>
+<script>
+    $(document).ready(function(){         //execute this function when decument is ready
+        $.get("/backend/getSmartboxList.php", function (data) { //send a Get request on the specific par
+            $("#sbList").html(data);            //adds content on the selectbox in Upload script form
+        });
+
+        $.ajax({
+            url: "/backend/showScriptTable.php",       //makes post request to the url
+            method: "POST",
+            data: {showScriptTable: 1},
+            success: function (data) {      //on success displays message and reload page
+                $("#scriptContent").html(data);
+            }
+        });
+
+    });
+
+    function cancelUpload(){        //reloads page when pressing the cancel button in Upload Scripts
+        location.reload();
+    }
+
+    function uploadFile(){              //get values from upload file Form and send with ajax a Post request to the server
+
+        let form = $("#fileForm")[0];
+
+        $.ajax({
+            url: "/backend/uploadScripts.php",
+            method: "POST",
+            data: new FormData(form),
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data){
+                alert(data);
+            }
+        });
+
+    }
+
+    function editScript(scriptName){
+        alert("edit " +scriptName);
+    }
+
+    function deleteScript(scriptName){  //function to delete selected scripts
+        $.ajax({
+            url: "/backend/deleteScript.php",       //makes post request to the url
+            method: "POST",
+            data: {deleteScript: 1, scriptName: scriptName},
+            success: function (data) {      //on success displays message and reload page
+               alert(data);
+               location.reload();
+            }
+        });
+    }
+
+    function showContentScript(scriptName){ //show content of script
+        //alert("show Content " +scriptName);
+        $.ajax({
+            url: "/backend/showScriptContent.php",       //makes post request to the url
+            method: "POST",
+            data: {showScriptContent: 1, scriptName: scriptName},
+            success: function (data) {      //on success displays message and reload page
+                alert(data);
+                //location.reload();
+            }
+        })
+    }
+
+</script>

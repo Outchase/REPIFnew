@@ -1,7 +1,7 @@
 <?php
 $servername = "172.16.248.163";
-$username = "pif_user";
-$password = "userpw";
+$username = "pif_admin";
+$password = "adminpw";
 $dbname = "rexiz123";
 
 $mysqli = new mysqli($servername,

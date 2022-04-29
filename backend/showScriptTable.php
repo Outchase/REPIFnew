@@ -1,0 +1,20 @@
+<?php
+if (isset($_POST['showScriptTable'])) {
+    $output="";
+    include_once "sqlConnect.inc";      //connect to the database
+    $sql = "SELECT * FROM tblScript";
+    $result = $mysqli->query($sql);             //saves the result in a variable
+
+    if ($result->num_rows > 0) {
+        $output="<table><thead><tr><th>Script Name</th><th>Script Path</th><th>Description</th></tr></thead><tbody>";
+        for ($i=0; $i<mysqli_num_rows($result); $i++) {     //loop through the result and adds into declared array ($a)
+            $row = mysqli_fetch_assoc($result);
+            $output.="<tr><td>".$row['idScriptName']."</td><td>".$row['dtPath']."</td><td>".$row['dtDescription']."</td><td><button onclick=editScript('".$row['idScriptName']."')>Edit</button></td><td><button onclick=deleteScript('".$row['idScriptName']."')>Delete</button></td><td><button onclick=showContentScript('".$row['idScriptName']."')>Show content</button></td></tr>";
+        }
+        $output.="</tbody></table>";
+    } else{
+        $output="<p style='color: red'>There are no script available</p>";
+    }
+    echo $output;
+}
+?>
