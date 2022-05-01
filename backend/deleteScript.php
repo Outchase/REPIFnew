@@ -1,17 +1,15 @@
 <?php
-if (isset($_POST['deleteScript'])){
+if (isset($_POST['deleteScript'])) {
     include_once "sqlConnect.inc";      //connect to database
 
-    $scriptName= $_POST['scriptName'];
-    $dirPath= "/smartbox/*/".$scriptName;
-    $filePath= "/smartbox/*/".$scriptName."/*";
-    $dirs= glob($dirPath);
-    $files= glob($filePath);
+    $scriptName = $_POST['scriptName'];
+    $path = $_POST['path'];
+    $filePath = "/smartbox/*" . $path;
+    $files = glob($filePath);
 
-    if (count($dirs)>0) {
-        for ($i = 0; $i < count($dirs); $i++) {
+    if (count($files) > 0) {
+        for ($i = 0; $i < count($files); $i++) {
             unlink($files[$i]);
-            rmdir($dirs[$i]);
         }
 
         $sql = $mysqli->prepare("DELETE FROM tblScript WHERE idScriptName=?");     //user prepare statement to delete the specific pinNumber and hostname
@@ -24,8 +22,7 @@ if (isset($_POST['deleteScript'])){
         $mysqli->close();
 
     } else {
-        echo "No directory/files found";
+        echo "No files found";
     }
-    //unlink("/smartbox/SB_4/".$scriptName."/Twice-Feel.sh"); // works
 }
 ?>

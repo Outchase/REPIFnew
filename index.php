@@ -4,6 +4,7 @@
 <head>
     <title>index.html</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://use.typekit.net/qis4qci.css">
     <link rel="stylesheet" href="main.css">                     <!--Links css file to index page-->
     <script src="/Other/jquery.js"></script>                   <!--Links jquery file to index page-->
     <script>
@@ -21,7 +22,7 @@
                         data: {login: 1, email: email, password: password},     //Specifies data to be sent to the server
                         success: function (data) {                              //execute function when request was a success
                             if (data === "") {                                  //checks if data is empty
-                                $("#response").html("Email or password is wrong!"); //send message to the selected html id
+                                $(".loginForm").append("<p style='color: red; font-weight: bold '>Email or password is wrong!</p>"); //send message to the selected html id
                             } else {
                                 location.reload();                          //reloads page
                             }
@@ -42,7 +43,7 @@
                     location.reload();
                 }
             });
-        };
+        }
     </script>
 </head>
 <body>
@@ -62,7 +63,7 @@ if ($_SESSION["technician"] === "1") {                  //check if logged user i
             include_once "./frontend/UM.html";             //replace in div element with id output with User management page
         } else if ($_GET['page'] === "SM") {                   //check if Get page has the value SM
             include_once "./frontend/SM.html";           //replace in div output the content with Smartbox management page
-        }else if ($_GET['page'] === "scriptPage") {                   //check if Get page has the value SM
+        } else if ($_GET['page'] === "scriptPage") {                   //check if Get page has the value SM
             include_once "./frontend/scriptPage.html";           //replace in div output the content with Smartbox management page
         } else {
             include_once "./backend/welcome.php";
@@ -74,11 +75,11 @@ if ($_SESSION["technician"] === "1") {                  //check if logged user i
             include_once "./backend/welcome.php";
         }
     }
-} else {
+    } else {
         include_once "./frontend/login.html";           //includes login page when session is not set
-}
+    }
     ?>
 </div>
-<h3>Footer</h3>
+<footer><h4>&copy Izmir Rexhepi 1TPIF2 2022</h4></footer>
 </body>
 </html>

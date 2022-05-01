@@ -1,10 +1,12 @@
 <h2>Script Management</h2>
 <div id="scriptContent"></div>
+<div id="scriptResponse"></div>
 <div id="SMfileUplad">
     <h2>Upload Script:</h2>
     <form method="post" onsubmit="uploadFile()" enctype="multipart/form-data" id="fileForm">
         <label>FileName: </label><input id="fileName" type="text" name="fileName" required><br>
         <label>File Description: </label><input id="fileDesc" type="text" name="fileDesc" required><br>
+        <label>Type of Script: </label><select id="typeScript" name="typeScript" required><option value="Sound">Sound</option><option value="Switch">Switch</option><option value="Other">Other</option></select><br>
         <input id="uploadScript" type="file" accept="*" name="uploadScript" value="upload file"required><br>
         <input type="submit" value="Upload" required>
         <input type="button" value="Cancel" onclick="cancelUpload()">
@@ -44,20 +46,30 @@
             processData:false,
             success: function(data){
                 alert(data);
+                location.reload();
             }
         });
 
     }
 
-    function editScript(scriptName){
-        alert("edit " +scriptName);
+    function editScript(scriptName, path){
+        $.ajax({
+            url: "/backend/editScript.php",       //makes post request to the url
+            method: "POST",
+            data: {editScript: 1, scriptName: scriptName, path: path},
+            success: function (data) {      //on success displays message and reload page
+                $("#scriptResponse").html(data);
+            }
+        });
+
+
     }
 
-    function deleteScript(scriptName){  //function to delete selected scripts
+    function deleteScript(scriptName, path){  //function to delete selected scripts
         $.ajax({
             url: "/backend/deleteScript.php",       //makes post request to the url
             method: "POST",
-            data: {deleteScript: 1, scriptName: scriptName},
+            data: {deleteScript: 1, scriptName: scriptName, path: path},
             success: function (data) {      //on success displays message and reload page
                alert(data);
                location.reload();
@@ -65,17 +77,18 @@
         });
     }
 
-    function showContentScript(scriptName){ //show content of script
-        //alert("show Content " +scriptName);
+    function updateScriptContent(path, scriptName){
+        let scriptDesc= $("#scriptDesc").val();
+        let scriptContent= $("#scriptContentForm").val();
         $.ajax({
-            url: "/backend/showScriptContent.php",       //makes post request to the url
+            url: "/backend/updateScriptContent.php",       //makes post request to the url
             method: "POST",
-            data: {showScriptContent: 1, scriptName: scriptName},
+            data: {updateScriptContent: 1, scriptName: scriptName, path: path, scriptDesc: scriptDesc, scriptContent: scriptContent},
             success: function (data) {      //on success displays message and reload page
                 alert(data);
-                //location.reload();
+                location.reload();
             }
-        })
+        });
     }
 
 </script>
