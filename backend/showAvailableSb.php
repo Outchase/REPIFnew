@@ -2,13 +2,14 @@
 if (isset($_POST['showAvailableSb'])){
     session_start();
     $userId= $_SESSION["userID"];
+    $hostname= $_POST['hostname'];
     $output= "";
 
     include_once "sqlConnect.inc";      //connects to the database
 
     $sql= "SELECT tblConfigure.fiHostname FROM tblConfigure 
     INNER JOIN tblUser ON tblUser.idUserNr=tblConfigure.fiUserNr 
-    WHERE tblConfigure.fiUserNr='$userId'";   //query that selects the groups which are not assigned to.
+    WHERE tblConfigure.fiUserNr='$userId' AND tblConfigure.fiHostname='$hostname'";   //query that selects the groups which are not assigned to.
 
     $result = $mysqli->query($sql);             //performs query in a database and saves result into a variable
 

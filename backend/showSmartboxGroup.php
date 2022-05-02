@@ -10,19 +10,12 @@ if (isset($_POST['smGr'])){
     $output = "";
 
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
+        $output.="<table><thead><tr><th>Group Number</th><th>Name</th><th>Description</th></tr></thead><tbody>";
         for ($i=0; $i<mysqli_num_rows($result); $i++) {
-
             $row = mysqli_fetch_assoc($result);
-            $output.= "<div id='group".$row['fiGroupNr']."'> <h4>Group ". $row['fiGroupNr'] . ": ". $row['dtGroupName'] ." (". $row['dtDescription'] .")</h4>";
-            $tempSql = "SELECT fiPinNr from tblAffect WHERE fiGroupNr = ". $row['fiGroupNr']; //query that selects Pins from selected Group
-            $tempResult = $mysqli->query($tempSql);             //create new variable with temporary values, so it won't replace the accent one
-            for ($j=0; $j<mysqli_num_rows($tempResult); $j++) {
-                $tempRow = mysqli_fetch_assoc($tempResult);
-                $output .= "<p>".$tempRow['fiPinNr']." <button onclick=removePinFromGroup(".$tempRow['fiPinNr'].",".$row['fiGroupNr'].",'".$hostname."')>-</button></p>"; //display the pins with an option to remove the pins from the group
-            }
-            $output.= "<button onclick=showAddPinToGroup(".$row['fiGroupNr'].",'".$hostname."')>+</button><div id='assignScriptForm".$row['fiGroupNr']."'></div><button onclick='assignScript(".$row['fiGroupNr'].")'>Assign script</button><button onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button><button onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></div>";  // add option to add pins to Group or to delete the Group
+            $output.="<tr><td>".$row['fiGroupNr']."</td><td>". $row['dtGroupName'] ."</td><td>". $row['dtDescription'] ."</td><td><button class='normalBtn' onclick=showGroupAssignForm('".$hostname."')>Assign Groups</button></td><td><button class='normalBtn' onclick='showGroupPins(".$row['fiGroupNr'].")'>Pins</button></td><td><button class='normalBtn' onclick='assignScript(".$row['fiGroupNr'].")'>Scripts</button></td><td><button class='normalBtn' onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button></td><td><button class='normalBtn' onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></td>";
         }
-        $output.="<div id='addOutput'></div>";
+        $output.="</tbody></table><div id='groupResponse' class='tableContainer'></div>";
     } else {
         $output= "error";
     }

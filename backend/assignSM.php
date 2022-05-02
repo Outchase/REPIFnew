@@ -11,14 +11,14 @@ if (isset($_POST['assign'])) {
     } else{
         $sql = "SELECT * FROM `tblUser`";       //query that selects everything from table User
         $result = $mysqli->query($sql);
-        $output= "<form method='post' onsubmit=updateSmAssign('".$hostname. "')><label>Assign ".$hostname. " to: </label><select  id='umOptions'>";     //generates a from to assign the new smartbox
+        $output= "<form method='post' onsubmit=updateSmAssign('".$hostname. "') class='form'><label>Assign ".$hostname. " to: <select  id='umOptions'>";     //generates a from to assign the new smartbox
         if ($result->num_rows > 0) {
             for ($i=0; $i<mysqli_num_rows($result); $i++) {     //add a samtbox hostnames in the selectbox to select
                 $row = mysqli_fetch_assoc($result);
                 $output.= "<option value='". $row['idUserNr'] ."'>" .$row['dtName'] ." " .$row['dtFirstName']."</option>";
             }
         }
-        $output.=" </select><input type='submit' value='Assign' ></form>";
+        $output.=" </select><input type='submit' value='Assign' class='normalBtn'></label></form>";
     }
     echo $output;       //sends the generated form or message back
 

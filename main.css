@@ -11,15 +11,18 @@ body {
     flex-wrap: wrap;
     align-items: center;
     background-color: #B5A8FF;
+    margin: auto;
 }
-.loginForm, .form input{
+
+.loginForm, .form input, .pwForm input, .editSMDropDown input, .editUMDropDown input, #smResponse input, select#typeScript, .form textarea, select.asGr, #assignGroupContent input, #editEvent input, #switchEditContent input{
     border-radius: 0.2rem;
     border: solid 1px rgba(181, 168, 255, .5);
 }
 
-.form input:focus-visible{
+.form input:focus-visible, .pwForm input:focus-visible, .editSMDropDown input:focus-visible, .editUMDropDown input:focus-visible, #smResponse input:focus-visible, select#typeScript:focus-visible, .form textarea:focus-visible, select.asGr:focus-visible,  #assignGroupContent input:focus-visible, #editEvent input:focus-visible, #switchEditContent input:focus-visible{
     outline: solid 1px rgba(159, 143, 255, .5);
 }
+
 .loginForm {
     border-radius: 2rem;
     padding: 2rem;
@@ -41,7 +44,7 @@ body {
 .form {
     display: flex;
     flex-direction: column;
-    width: 16rem;
+    width: 17rem;
 }
 
 .form label {
@@ -49,20 +52,33 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
-#login{
+
+input.normalBtn, button.normalBtn {
     width: 6rem;
     height: 2rem;
     border-radius: 1rem;
     background-color: #B5A8FF;
     color: #FCFCFC;
+    border: none;
 }
 
-#login:hover{
+input.normalBtn:hover, button.normalBtn:hover {
     background-color: #9F8FFF;
 }
-label.loginInput{
+
+label.loginInput {
     justify-content: center;
 }
+
+nav.navigationBar {
+    width: 100%;
+}
+
+.mainContent {
+    background-color: #FCFCFC;
+    width: 100%;
+}
+
 h1 {
     font-family: open-sans, sans-serif, Arial;
     font-weight: 700;
@@ -73,11 +89,16 @@ h2 {
     font-family: open-sans-condensed, sans-serif, Arial;
     font-weight: 525;
     font-style: normal;
+    font-size: 2rem;
+    margin: 0;
+    text-decoration: underline 0.1rem;
 }
-h4{
+
+h4 {
     color: #FCFCFC;
 }
-ul {
+
+nav.navigationBar ul {
     list-style-type: none;
     display: flex;
     flex-direction: row;
@@ -85,14 +106,145 @@ ul {
     align-items: center;
 }
 
-a {
+nav.navigationBar a {
     text-decoration: none;
     font-weight: 700;
     color: black;
 }
 
-a:hover {
-    font-size: 1.6rem;
+nav.navigationBar a:hover {
+    font-size: 1.01rem;
 }
 
+#logout {
+    color: #FCFCFC;
+    border: #FCFCFC solid 0.01rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.5rem;
+}
 
+#logout:hover {
+    border-color: #F2FFA8;
+    font-size: 1.01rem;
+    background-color: #9FAFFF;
+    cursor: pointer;
+}
+
+.mainContent {
+    background-color: #FCFCFC;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcomeContainer {
+    height: 24.6rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.welcomeContainer h2 {
+    font-size: 3.5rem;
+    text-decoration: none;
+}
+
+#userInfo button {
+    border: none;
+    width: 8rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+}
+
+.pwForm {
+    display: flex;
+    flex-direction: column;
+    width: 22rem;
+}
+.pwForm label{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.formButton{
+    display: flex;
+    justify-content: space-around;
+}
+div.umContainer {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+div.tableContainer thead{
+    color: #B5A8FF;
+}
+div.tableContainer thead tr{
+    text-align: left;
+}
+div.tableContainer thead th{
+    font-weight: bold;
+}
+div.tableContainer th, div.tableContainer td{
+    padding: 0.3rem;
+}
+div.umContainer input, div#scriptContent button, #scriptResponse button, #showSmartbox button,  button.normalBtn.addPin, #addOutput button.normalBtn, div#assignGroupContent .formButton button, #assignGroupContent button{
+    border-radius: 0.2rem;
+}
+div.umContainer form{
+    padding: 0.5rem 0;
+}
+#SM.tableContainer td:nth-child(7) input, #showSmartbox td:nth-child(7) button, #groupsContent tbody td:nth-child(4) button{
+    width: 8rem;
+}
+.editUMDropDown, .editSMDropDown{
+    background-color: #EFEFEF;
+}
+
+.confirmColumn{
+    text-align: right;
+}
+.addPin input, button.normalBtn.addPin {
+    width: 2rem;
+}
+#smResponse form{
+    width: 22rem;
+}
+
+#smResponse label{
+    align-items: baseline;
+}
+#fileForm{
+    width: 19rem;
+}
+select#typeScript {
+    width: 10.5rem;
+}
+textarea#scriptContentForm {
+    resize: none;
+    height: 5rem;
+}
+select.asGr{
+    width: 5rem;
+}
+#assignGroupContent table{
+    background-color: #EFEFEF;
+}
+div#assignGroupContent .formButton{
+    width: 15rem;
+}
+
+form#switchAssignment{
+    width: 21rem;
+}
+
+#editSwitchBtn{
+    width: 20rem;
+}

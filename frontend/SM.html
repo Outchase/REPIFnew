@@ -1,23 +1,30 @@
-<h2>Smartbox Management Page</h2>
-<div id="SM"></div>
-<div id="smResponse"></div>
-<div id="SMform">
-    <h2>Create a new Smartbox:</h2>
-    <form method="post" onsubmit="createSmartbox()">
-        <label>Hostname: </label><input type="text" required id="inputHostname"><br>
-        <label>Description: </label><input type="text" required id="inputDescription"><br>
-        <label>Location: </label><input type="text" id="inputLocation" required><br>
-        <input type="submit" value="Submit">
-    </form>
+<div class="umContainer">
+    <h2>Smartbox Management Page</h2>
+    <div id="SM" class="tableContainer"></div>
+    <div id="smResponse" class="tableContainer"></div>
+    <div id="SMform">
+        <h2>Create a new Smartbox:</h2>
+        <form method="post" onsubmit="createSmartbox()" class="form">
+            <label>Hostname: <input type="text" required id="inputHostname"></label><br>
+            <label>Description: <input type="text" required id="inputDescription"></label><br>
+            <label>Location: <input type="text" id="inputLocation" required></label><br>
+            <input type="submit" value="Submit" class='normalBtn'>
+        </form>
+    </div>
 </div>
 <script>
     $(document).ready(function () {         //execute this function when decument is ready
-        $.get("/backend/getSmartboxList.php", function (data){ //send a Get request on the specific par
+        $.get("/backend/getSmartboxList.php", function (data) { //send a Get request on the specific par
             $("#sbList").html(data);            //adds content on the selectbox in Upload script form
         });
 
         $(document).on('click', ".editSM input", function () {     //listens to a click event at the edit button in Smartbox Management Table
             $(this).parent().parent().next().slideToggle();            //Toggle between slideUp() and slideDown() for the selected element
+            if ($(this).val() ==="Edit"){
+                $(this).val("Cancel");
+            }else {
+                $(this).val("Edit")
+            }
         });
 
         $.ajax({                                    //ajax method that get the list of Samrtboxes from database
@@ -35,18 +42,17 @@
                         "<td>" + sm[i].hostname + "</td>" +
                         "<td>" + sm[i].description + "</td>" +
                         "<td>" + sm[i].location + "</td>" +
-                        "<td class='editSM'><input value='Edit' type='button'></td>" +
-                        "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "')></td>" +
-                        "<td><input value='Assign SmartBox to a Client' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "')></td>" +
-                        "<td><input value='Pins' type='button' onclick=pinsSM('" + sm[i].hostname.toString() + "')></td>" +
+                        "<td class='editSM'><input value='Edit' type='button' class='normalBtn'></td>" +
+                        "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
+                        "<td><input value='Assign SmartBox' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
+                        "<td><input value='Pins' type='button' onclick=pinsSM('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
                         "</tr>");
 
                     $("#output #SM table").append("<tr class='editSMDropDown'>" +
-                        "<td>Change info of Smartbox " + sm[i].hostname + " here:</td>" +
-                        "<td></td>" +
+                        "<td colspan='2'>Info of Smartbox " + sm[i].hostname + ":</td>" +
                         "<td><input value='" + sm[i].description + "' type='text' id='editSMDescription" + sm[i].hostname + "'></td>" +
                         "<td><input value='" + sm[i].location + "' type='text' id='editSMLocation" + sm[i].hostname + "'></td>" +
-                        "<td><input type='button' value='Confirm' onclick=updateSM('" + sm[i].hostname.toString() + "')></td>" +
+                        "<td colspan='5' class='confirmColumn'><input type='button' class='normalBtn' value='Confirm' onclick=updateSM('" + sm[i].hostname.toString() + "')></td>" +
                         "</tr>");
 
                     $(".editSMDropDown").hide();            //2nd is hidden and the selected 2nd rows appears by clicking on the edit button on the first row
@@ -57,7 +63,7 @@
     });
 
     function addPins(SMHostname) {      //adds a row to insert values for a new pin
-        $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td><input type='button' value='+' onclick=insertPins('" + SMHostname + "')></td>");
+        $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td class='addPin'><input type='button' class='normalBtn' value='+' onclick=insertPins('" + SMHostname + "')></td>");
     }
 
     function insertPins(SMHostname) {       //inserts the values from new added pins into database
@@ -135,21 +141,21 @@
             pinsInOut = 0;
         }
         if (pinsDescription.startsWith("GPIO") && pinsDescription.length > 4 && pinsDescription.length < 7) {   //checks samrtbox description start with GPIO and if the length is between 4 and 7
-                $.ajax({
-                    url: "/backend/updatePins.php",
-                    method: "POST",
-                    data: {
-                        updatePin: 1,
-                        pinsDesc: pinsDescription,
-                        pinsInOut: pinsInOut,
-                        hostname: hostname,
-                        pinId: PinNr
-                    },
-                    success: function (data) {      //on success display message and reload page
-                        alert(data);
-                        location.reload();
-                    }
-                });
+            $.ajax({
+                url: "/backend/updatePins.php",
+                method: "POST",
+                data: {
+                    updatePin: 1,
+                    pinsDesc: pinsDescription,
+                    pinsInOut: pinsInOut,
+                    hostname: hostname,
+                    pinId: PinNr
+                },
+                success: function (data) {      //on success display message and reload page
+                    alert(data);
+                    location.reload();
+                }
+            });
         } else {
             alert("Invalid values");
         }

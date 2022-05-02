@@ -10,9 +10,9 @@ if (isset($_POST['showGroupEdit'])) {
 
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
         $row = mysqli_fetch_assoc($result);
-        $output= "<h4>Edit group ".$group." here:</h4><label>Group Name: </label><input id='inputGroupName".$group."' type='text' required value='".$row['dtGroupName']."'><br>
-        <label>Description: </label><input id='inputGroupDesc".$group."'type='text' value='".$row['dtDescription']."' required><br>
-        <button onclick='updateGroup(".$group.")'>Update</button>";
+        $output="<table><thead><tr><th>Group Number</th><th>Group Name</th><th>Description</th></tr></thead><tbody>";
+        $output.="<tr><td>".$group."</td><td><input id='inputGroupName".$group."' type='text' required value='".$row['dtGroupName']."'></td><td><input id='inputGroupDesc".$group."'type='text' value='".$row['dtDescription']."' required></td><td><button class='normalBtn' onclick='updateGroup(".$group.")'>Update</button></td><td><input class='normalBtn' type='button' value='Cancel' onclick='cancel()'></td></tr>";
+        $output.="</tbody></table>";
         echo $output;
     }
 

@@ -14,7 +14,7 @@ if (isset($_POST['avPin'])){
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
         for ($i=0; $i<mysqli_num_rows($result); $i++) {
             $row = mysqli_fetch_assoc($result);
-            $output.= "<option value='".$row['idPinNr']."'>".$row['idPinNr']."</option>";
+            $output.= "<option  value='".$row['idPinNr']."'>".$row['idPinNr']."</option>";
         }
 
     } else {

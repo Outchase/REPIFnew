@@ -15,7 +15,7 @@ if (isset($_POST['showSwitchEdit'])) {
 
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
         $row = mysqli_fetch_assoc($result);
-        $output.= "<h3>Edit switch:</h3><label>Description: </label><input id='editSwitchDesc' type='text' value='".$row['dtDescription']."'><br><label>Sequence Number: </label><input id='editSwitchSeq' type='number' value='".$row['dtSequenceNr']."'><br><label>Delay: </label><input id='editSwitchDelay' type='number' value='".$row['dtDelay']."'><br><button onclick=updateSwitch('".$functionsCode."','".$hostname."','".$eventCode."',".$pinNr.",".$groupNr.")>Update</button>";
+        $output.= "<h2>Edit switch:</h2><label>Description: <input id='editSwitchDesc' type='text' value='".$row['dtDescription']."'></label><br><label>Sequence Number: <input id='editSwitchSeq' type='number' value='".$row['dtSequenceNr']."'></label><br><label>Delay: <input id='editSwitchDelay' type='number' value='".$row['dtDelay']."'></label><br><div id='editSwitchBtn' class='formButton'><button class='normalBtn' onclick=updateSwitch('".$functionsCode."','".$hostname."','".$eventCode."',".$pinNr.",".$groupNr.")>Update</button><button class='normalBtn' onclick='cancel()'>Cancel</button></div>";
     }else{
         $output= "error";
     }

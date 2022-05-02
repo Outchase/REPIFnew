@@ -4,6 +4,7 @@
 <head>
     <title>index.html</title>
     <meta charset="utf-8">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <link rel="stylesheet" href="https://use.typekit.net/qis4qci.css">
     <link rel="stylesheet" href="main.css">                     <!--Links css file to index page-->
     <script src="/Other/jquery.js"></script>                   <!--Links jquery file to index page-->
@@ -56,7 +57,7 @@ if ($_SESSION["technician"] === "1") {                  //check if logged user i
 }
 
 ?>
-<div id="output">
+<section id="output" class="mainContent">
     <?php
     if ($_SESSION["technician"] === "1") {                      //check if logged user is a Technician
         if ($_GET['page'] === "UM") {                           //check if Get page has the value UM
@@ -79,7 +80,7 @@ if ($_SESSION["technician"] === "1") {                  //check if logged user i
         include_once "./frontend/login.html";           //includes login page when session is not set
     }
     ?>
-</div>
+</section>
 <footer><h4>&copy Izmir Rexhepi 1TPIF2 2022</h4></footer>
 </body>
 </html>

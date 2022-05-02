@@ -1,20 +1,27 @@
-<h2>User Management Page</h2>
-<div id="UM"></div>
-<div id="UMform">
-    <h2>Create a new User:</h2>
-    <form method="post" onsubmit="createUser()">
-        <label>Name: </label><input type="text" required id="inputName"><br>
-        <label>First name: </label><input type="text" required id="inputFirstName"><br>
-        <label>Technician: </label><input type="checkbox" id="inputTechnician"><br>
-        <label>Email: </label><input type="email" required id="inputEmail"><br>
-        <label>Password: </label> <input type="password" required id="inputPassword"><br>
-        <input type="submit" value="Submit">
-    </form>
+<div class="umContainer">
+    <h2>User Management Page</h2>
+    <div id="UM" class="tableContainer"></div>
+    <div id="UMform">
+        <h2>Create a new User:</h2>
+        <form method="post" onsubmit="createUser()" class="form">
+            <label>Name: <input type="text" required id="inputName"></label><br>
+            <label>First name: <input type="text" required id="inputFirstName"></label><br>
+            <label>Technician: <input type="checkbox" id="inputTechnician"></label><br>
+            <label>Email: <input type="email" required id="inputEmail"></label><br>
+            <label>Password: <input type="password" required id="inputPassword"></label><br>
+            <input type="submit" value="Submit" class="normalBtn">
+        </form>
+    </div>
 </div>
 <script>
     $(document).ready(function () {                     //When the document is ready execute the function below
         $(document).on('click', ".editUM input", function () {     //listen when a onclick happens at the selected element (2nd row appears/disappears)
             $(this).parent().parent().next().slideToggle();         //Toggle between slideUp() and slideDown() for the selected element
+            if ($(this).val() ==="Edit"){
+                $(this).val("Cancel");
+            }else {
+                $(this).val("Edit")
+            }
         });
 
 
@@ -25,7 +32,7 @@
             success: function (data) {              //gives the list of Users back
                 let um = JSON.parse(data);          //JSON.parse()creates a corresponding JavaScript object from a JSON-formatted text
 
-                $("#output #UM").html("<table><thead><tr><th>ID</th><th>Name</th><th>Firstname</th><th>Technician</th><th>Email</th></tr></thead><tbody>");    //generates Tables and add values from the list of Users that we got from ajax method
+                $("#output #UM").html("<table><thead><tr><th>ID</th><th>Name</th><th>Firstname</th><th>Technician</th><th>Email</th><th></th><th></th></tr></thead><tbody>");    //generates Tables and add values from the list of Users that we got from ajax method
                 for (let i = 0; i < um.length; i++) {                                   //generate 2 table rows each time depending on the length of array um
                     $("#output #UM table").append("<tr class='UmElement'>" +
                         "<td id='umIdUser" + um[i].id + "'>" + um[i].id + "</td>" +
@@ -33,17 +40,17 @@
                         "<td>" + um[i].firstName + "</td>" +
                         "<td>" + um[i].technician + "</td>" +
                         "<td>" + um[i].email + "</td>" +
-                        "<td class='editUM'><input value='Edit' type='button'></td>" +
-                        "<td><input value='Delete' type='button' onclick='deleteUser("+um[i].id+")'></td>" +
+                        "<td class='editUM'><input value='Edit' type='button' class='normalBtn'></td>" +
+                        "<td><input value='Delete' type='button' onclick='deleteUser(" + um[i].id + ")' class='normalBtn'></td>" +
                         "</tr>");
                     $("#output #UM table").append("<tr class='editUMDropDown'>" +
                         "<td>Change User Info here:</td>" +
-                        "<td><input id='editUserName" + um[i].id + "' value='"+um[i].name+"' type='text'></td>" +
-                        "<td><input id='editUserFirstName" + um[i].id + "' value='"+um[i].firstName +"' type='text'></td>" +
+                        "<td><input id='editUserName" + um[i].id + "' value='" + um[i].name + "' type='text'></td>" +
+                        "<td><input id='editUserFirstName" + um[i].id + "' value='" + um[i].firstName + "' type='text'></td>" +
                         "<td></td>" +
-                        "<td><input id='editUserEmail" + um[i].id + "' value='"+um[i].email +"' type='email'></td>" +
-                        "<td></td>" +
-                        "<td><input type='submit' value='Confirm' onclick='updateUser("+um[i].id+")'></td></tr>"
+                        "<td><input id='editUserEmail" + um[i].id + "' value='" + um[i].email + "' type='email'></td>" +
+                        "<td ></td>" +
+                        "<td><input type='submit' value='Confirm' onclick='updateUser(" + um[i].id + ")' class='normalBtn'></td></tr>"
                     );
                     $(".editUMDropDown").hide();                                    // hides 2nd table row
                 }
@@ -56,18 +63,18 @@
 
     });
 
-    function updateUser(userID){                //executes function with Id parameter when user clicks on confirm button at User edit
+    function updateUser(userID) {                //executes function with Id parameter when user clicks on confirm button at User edit
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");      //prompt to confirm changes and executes it
         if (confirm === "Confirm") {                                                             //checks if prompt value is correct
             let name = $("#editUserName" + userID).val();                                       //saves values into a variable from given parameter
             let firstName = $("#editUserFirstName" + userID).val();
             let email = $("#editUserEmail" + userID).val();
-            if (email.includes("@")){                                                           //checks if email includes the specific character
-                if (name.length > 0 && firstName.length > 0 && email.length > 0){               //checks if values are not empty
+            if (email.includes("@")) {                                                           //checks if email includes the specific character
+                if (name.length > 0 && firstName.length > 0 && email.length > 0) {               //checks if values are not empty
                     $.ajax({
                         url: "/backend/updateUM.php",                                           //sends with ajax over Post request the data
                         method: "POST",
-                        data: {updateUM: userID, name: name, firstName: firstName, email: email },
+                        data: {updateUM: userID, name: name, firstName: firstName, email: email},
                         success: function (data) {                                              //execute function on success which shows message and reloads the page
                             alert(data);
                             location.reload();
@@ -79,36 +86,34 @@
             } else {                                                                           //cancel updates if email is not valid
                 alert("email is invalid");
             }
-        }
-        else {                                                                                //cancel update on mistype or cancel in prompt
+        } else {                                                                                //cancel update on mistype or cancel in prompt
             alert("Update got cancelled");
         }
 
     }
 
-    function deleteUser(userID){            //executes function with Id parameter when user clicks on delete button at User Manager Table
+    function deleteUser(userID) {            //executes function with Id parameter when user clicks on delete button at User Manager Table
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");           //prompt to delete the user
         if (confirm === "Delete") {                                                                                 // checks if prompt value is correct
             $.ajax({
                 url: "/backend/deleteUM.php",                                                                        //sends with ajax over Post request the data
                 method: "POST",
-                data: {deleteUM: userID },
+                data: {deleteUM: userID},
                 success: function (data) {                                                 //On success a alert Windows shows up and reloads the page
                     alert(data);
                     location.reload();
                 }
             });
-        }
-        else {                                                                             //Cancels user Delete on mistype or canceling
+        } else {                                                                             //Cancels user Delete on mistype or canceling
             alert("Delete got cancelled");
         }
 
     }
 
-    function createUser(){      //executes function that creates user by clicking the submit button on Create User form
+    function createUser() {      //executes function that creates user by clicking the submit button on Create User form
         let technician;        //declares a variable
-        if ($("#inputTechnician").is(":checked")){  //checks if checkbox is checked and replaces it with numbers
-           technician = 1;          //saves teh replaces values in a variable
+        if ($("#inputTechnician").is(":checked")) {  //checks if checkbox is checked and replaces it with numbers
+            technician = 1;          //saves teh replaces values in a variable
         } else {
             technician = 0;
         }
@@ -116,17 +121,23 @@
         let firstName = $("#inputFirstName").val();
         let email = $("#inputEmail").val();
         let password = $("#inputPassword").val();
-
         $.ajax({
             url: "/backend/createUser.php",
             method: "POST",                          //sends with ajax over Post request the data
-            data: {createUser: 1, name: name, firstName: firstName, technician: technician, email: email, password: password},
+            data: {
+                createUser: 1,
+                name: name,
+                firstName: firstName,
+                technician: technician,
+                email: email,
+                password: password
+            },
             success: function (data) {          //execute function on success
-               if (data === "exists"){          //checks de value of the parameter data
-                   alert("The user with a same email exists already");      //if user exists an error window will appear
-               } else {
-                   alert("Create successfully");
-               }
+                if (data === "exists") {          //checks de value of the parameter data
+                    alert("The user with a same email exists already");      //if user exists an error window will appear
+                } else {
+                    alert("Create successfully");
+                }
             }
         });
 

@@ -11,9 +11,9 @@ if (isset($_POST['pins'])){
         for ($i=0; $i<mysqli_num_rows($result); $i++) {
             $row = mysqli_fetch_assoc($result);
                 if($row['dtInputOrOutput']=== "1"){     // if chance check box to chekced ot not checked
-                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox' checked  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='update pins' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' value='delete pins' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></td></tr>";
+                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox' checked  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' class='normalBtn' value='Update' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' class='normalBtn' value='Delete' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></td></tr>";
                 } else{
-                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox'  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='update pins' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' value='delete pins' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></tr>";
+                    $output.= "<tr><td>".$row['idPinNr'] ."</td><td><input type='text' id='editPinsDescription". $row['idPinNr'] ."' value='". $row['dtDescription'] ."'></td><td><input type='checkbox'  id='editPinsInOut". $row['idPinNr'] ."'></td><td>".$hostname ."</td><td><input type='button' value='Update' class='normalBtn' onclick=updatePins(".$row['idPinNr'].",'".$hostname."')></td><td><input type='button' class='normalBtn' value='Delete' onclick=deletePins(".$row['idPinNr'].",'".$hostname."')></tr>";
                 }
         }
 
@@ -25,7 +25,7 @@ if (isset($_POST['pins'])){
     $sql = "SELECT fiUserNr FROM `tblConfigure` WHERE fiHostname='$hostname'";  // query that selects the foreign key from specific hostname
     $result = $mysqli->query($sql);
     if ($result->num_rows > 0) {        // if smartbox is assigned to User display the add pin Button
-        $output.= "<tr id='addInputPins'><td><input type='button' value='+' onclick=addPins('".$hostname."')></td></tr>";
+        $output.= "<tr id='addInputPins'><td class='addPin'><input type='button' class='normalBtn' value='+' onclick=addPins('".$hostname."')></td></tr>";
     } else{ //else display message to assign the new smartbox to a user first
         $output.= "<tr><td style='color: red'>The Smartbox: ".$hostname ." is not assigned to any clients. Please assign the Smartbox: ".$hostname." to a Client first!</td></tr>";
     }

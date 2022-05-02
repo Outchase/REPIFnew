@@ -11,9 +11,10 @@ if (isset($_POST['showEditEvent'])){
 
     if ($result->num_rows > 0) {                //Return the number of rows in a result set
         $row = mysqli_fetch_assoc($result);
-        $output= "<h4>Edit event ".$eventCode." here:</h4><label>Event Code: </label><input id='inputEventCode".$eventCode.$hostname.$pinNr."' type='text' required value='".$row['idEventCode']."'><br>
-        <label>Description: </label><input id='inputEventDesc".$eventCode.$hostname.$pinNr."'type='text' value='".$row['dtDescription']."' required><br>
-        <button onclick=updateEvent('".$eventCode."','".$hostname."',".$pinNr.")>Update</button>";
+        $output= "<h2>Edit event ".$eventCode.":</h2><label>Event Code: <input id='inputEventCode".$eventCode.$hostname.$pinNr."' type='text' required value='".$row['idEventCode']."'></label><br>
+        <label>Description: <input id='inputEventDesc".$eventCode.$hostname.$pinNr."'type='text' value='".$row['dtDescription']."' required></label><br>
+        <button class='normalBtn' onclick=updateEvent('".$eventCode."','".$hostname."',".$pinNr.")>Update</button>
+        <button class='normalBtn' onclick='cancel()'>Cancel</button>";
         echo $output;
     }
 }
