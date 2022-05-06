@@ -14,7 +14,7 @@ if (isset($_POST['editScript'])) {
         <label>Description: <input id='scriptDesc' type='text' value='".$row['dtDescription']."'></label><br>
         <textarea id='scriptContentForm' required>" . $fileContent . "</textarea><br>
         <div class='formButton'><input type='submit' value='Update' class='normalBtn'>";
-    $output.="<button onclick='cancelUpload()' class='normalBtn'>Cancel</button></div>";
+    $output.="<button type='button' onclick='cancelUpload()' class='normalBtn'>Cancel</button></div></form>";
 
     echo $output;
 }

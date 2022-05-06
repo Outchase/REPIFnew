@@ -35,7 +35,7 @@
                     $("#sbAndPinToGroup").html("<p style='color: red'>No Smartbox Available</p>");
                 } else {
                     $("#availableSbList").html(data);
-                    showAvailablePins();
+                    showAvailablePins(hostname);
                 }
             }
         }); //shows available smartboxes
@@ -69,8 +69,7 @@
         showAvailableSb(hostname);
     }
 
-    function showAvailablePins() {      //shows avaialble pins
-        let hostname = $("#availableSbList").val();
+    function showAvailablePins(hostname) {      //shows avaialble pins
 
         $.ajax({
             url: "./backend/showAvailablePins.php",     //makes post request to the url
@@ -447,10 +446,9 @@
         let assignDesc = $("#assignDesc").val();
         let assignSeq = $("#assignSeq").val();
         let assignDelay = $("#assignDelay").val();
-        let assignEventCode = $("#assignEventCode").val();
+        let assignEventCode = $("#assignEventCode option").html();
         let assignPinNr = $("#assignPinNr").val();
         let assignGroupNr = $("#assignGroupNr").val();
-
 
         if (assignFuncCode === "A" || assignFuncCode === "E" || assignFuncCode === "U") {
             $.ajax({

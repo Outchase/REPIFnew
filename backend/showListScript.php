@@ -15,7 +15,7 @@ if (isset($_POST['showListScript'])) {
             $row = mysqli_fetch_assoc($result);
             $output.="<tr><td>".$row['fiScriptName']."</td><td>".$row['dtDescription']."</td></tr>";
         }
-        $output.="</tbody></table>";
+        $output.="</tr></tbody></table>";
     }else{
         $output="<p style='color: red'>No used script found.</p>";
     }

@@ -114,6 +114,7 @@ nav.navigationBar a {
 
 nav.navigationBar a:hover {
     font-size: 1.01rem;
+    color: #FCFCFC;
 }
 
 #logout {
@@ -247,4 +248,8 @@ form#switchAssignment{
 
 #editSwitchBtn{
     width: 20rem;
+}
+
+select#availScript {
+    width: unset;
 }

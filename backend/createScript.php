@@ -35,15 +35,16 @@ if (isset($_POST['executeScript'])){
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
+        chmod($directory, 0777);
 
         $myfile = fopen($directory."/gl.txt", 'w+') or die("Unable to open file!");
         fwrite($myfile, $output);
         fclose($myfile);
+        chmod($directory."/gl.txt", 0777);
 
+        echo "ok";
     }else {                                             //else sends message that there are no smartboxes
         echo "Error: No script assign to any group";
     }
-
-    echo "ok";
 }
 ?>

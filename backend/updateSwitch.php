@@ -11,6 +11,14 @@ if (isset($_POST['switchUpdate'])) {
     $pinNr = $_POST['pinNr'];
     $groupNr = $_POST['groupNr'];
 
+    if ($editSwitchSeq===0 || $editSwitchSeq===""){
+        $editSwitchSeq=NULL;
+    }
+
+    if ($editSwitchDelay===0 || $editSwitchDelay===""){
+        $editSwitchDelay=NULL;
+    }
+
     $sql = $mysqli-> prepare("UPDATE tblExecuteTheSwitch SET dtDescription =?, dtSequenceNr =?, dtDelay =? WHERE idShouldFunctionsCode =? AND fiHostname =? AND fiEventCode =? AND fiPinNr =? AND fiGroupNr =?");    //use prepare statement to update the values from specific group
     $sql->bind_param('siisssii', $editSwitchDesc, $editSwitchSeq, $editSwitchDelay, $functionsCode, $hostname, $eventCode, $pinNr, $groupNr);     //bound parameter
     $sql-> execute();       //executes sql

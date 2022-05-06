@@ -12,7 +12,7 @@ if (isset($_POST['showGroupPins'])) {
             $row = mysqli_fetch_assoc($result);
             $output .= "<tr><td>".$groupNr."</td><td>" . $row['fiPinNr'] . "</td><td>" . $row['dtDescription'] . "</td><td><button onclick=removePinFromGroup(" . $row['fiPinNr'] . "," . $groupNr . ",'" .$row['fiHostname']. "') class='normalBtn addPin'>-</button></td></tr>"; //display the pins with an option to remove the pins from the group
         }
-        $output.= "<tr id='addOutput'><td><button onclick=showAddPinToGroup(".$groupNr.",'".$row['fiHostname']."') class='normalBtn addPin'>+</button></td></tr></tbody></table>";
+        $output.= "<tr id='addOutput'><td><button onclick=showAddPinToGroup(".$groupNr.",'".$row['fiHostname']."') class='normalBtn addPin'>+</button></td><td><input type='button' value='Close' class='normalBtn' onclick='cancel()'></td></tr></tbody></table>";
         echo $output;
     } else {
         $output = "error";

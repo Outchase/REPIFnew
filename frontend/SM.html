@@ -46,6 +46,7 @@
                         "<td><input value='Delete' type='button' onclick=deleteSM('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
                         "<td><input value='Assign SmartBox' type='button' onclick=smAssign('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
                         "<td><input value='Pins' type='button' onclick=pinsSM('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
+                        "<td><input value='Scripts' type='button' onclick=scriptsSM('" + sm[i].hostname.toString() + "') class='normalBtn'></td>" +
                         "</tr>");
 
                     $("#output #SM table").append("<tr class='editSMDropDown'>" +
@@ -63,7 +64,7 @@
     });
 
     function addPins(SMHostname) {      //adds a row to insert values for a new pin
-        $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td class='addPin'><input type='button' class='normalBtn' value='+' onclick=insertPins('" + SMHostname + "')></td>");
+        $("#addInputPins").html("<td><input placeholder='Enter Pin Number here' type='number' id='addPinId" + SMHostname + "'></td><td><input placeholder='Enter description here' type='text' id='addPinDesc" + SMHostname + "'></td><td><input type='checkbox' id='addPinInOut" + SMHostname + "'></td><td>" + SMHostname + "</td><td class='addPin'><input type='button' class='normalBtn' value='+' onclick=insertPins('" + SMHostname + "')></td><td><input type='button' value='Cancel' class='normalBtn' onclick='cancelChanges()'></td>");
     }
 
     function insertPins(SMHostname) {       //inserts the values from new added pins into database
@@ -257,4 +258,22 @@
 
     }
 
+    function scriptsSM(hostname){
+        $.ajax({
+            url: "/backend/scriptsSM.php",
+            method: "POST",
+            data: {scriptsSM: 1, hostname: hostname},  //sends data over post request to the url
+            success: function (data) {              //on success display message
+                if(data==="none"){
+                    $("#smResponse").html("<p style='color: red'>No scripts used for "+hostname+"</p>");        //displays script from the selected smartbox
+                }else {
+                    $("#smResponse").html(data);        //displays script from the selected smartbox
+                }
+            }
+        });
+    }
+
+    function cancelChanges(){
+        location.reload();
+    }
 </script>
