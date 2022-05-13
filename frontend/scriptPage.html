@@ -74,15 +74,20 @@
     }
 
     function deleteScript(scriptName, path) {  //function to delete selected scripts
-        $.ajax({
-            url: "/backend/deleteScript.php",       //makes post request to the url
-            method: "POST",
-            data: {deleteScript: 1, scriptName: scriptName, path: path},
-            success: function (data) {      //on success displays message and reload page
-                alert(data);
-                location.reload();
-            }
-        });
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {     //checks if user confirms to delete the selected smartbox
+            $.ajax({
+                url: "/backend/deleteScript.php",       //makes post request to the url
+                method: "POST",
+                data: {deleteScript: 1, scriptName: scriptName, path: path},
+                success: function (data) {      //on success displays message and reload page
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Delete got cancelled");
+        }
     }
 
     function updateScriptContent(path, scriptName) {

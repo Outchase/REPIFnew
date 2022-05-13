@@ -235,11 +235,9 @@ textarea#scriptContentForm {
 select.asGr{
     width: 5rem;
 }
-#assignGroupContent table{
-    background-color: #EFEFEF;
-}
 div#assignGroupContent .formButton{
     width: 15rem;
+    margin: 0.5rem 0;
 }
 
 form#switchAssignment{
@@ -253,3 +251,19 @@ form#switchAssignment{
 select#availScript {
     width: unset;
 }
+
+div#assignGroupContent {
+    background-color: #EFEFEF;
+    border-radius: 0.5rem;
+}
+label#scriptChoice {
+    padding-left: 0.5rem;
+}
+div#editEvent {
+    margin-bottom: 1rem;
+}
+div#switchEditContent {
+    width: 21rem;
+    margin-bottom: 1rem;
+}
+

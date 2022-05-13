@@ -13,7 +13,16 @@ if (isset($_POST['smGr'])){
         $output.="<table><thead><tr><th>Group Number</th><th>Name</th><th>Description</th></tr></thead><tbody>";
         for ($i=0; $i<mysqli_num_rows($result); $i++) {
             $row = mysqli_fetch_assoc($result);
-            $output.="<tr><td>".$row['fiGroupNr']."</td><td>". $row['dtGroupName'] ."</td><td>". $row['dtDescription'] ."</td><td><button class='normalBtn' onclick=showGroupAssignForm('".$hostname."')>Assign Groups</button></td><td><button class='normalBtn' onclick='showGroupPins(".$row['fiGroupNr'].")'>Pins</button></td><td><button class='normalBtn' onclick='assignScript(".$row['fiGroupNr'].")'>Scripts</button></td><td><button class='normalBtn' onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button></td><td><button class='normalBtn' onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></td>";
+            $output.="<tr>
+                <td>".$row['fiGroupNr']."</td>
+                <td>". $row['dtGroupName'] ."</td>
+                <td>". $row['dtDescription'] ."</td>
+                <td><button class='normalBtn' onclick=showGroupAssignForm('".$hostname."')>Assign Groups</button></td>
+                <td><button class='normalBtn' onclick='showGroupPins(".$row['fiGroupNr'].")'>Pins</button></td>
+                <td><button class='normalBtn' onclick='assignScript(".$row['fiGroupNr'].")'>Scripts</button></td>
+                <td><button class='normalBtn' onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button></td>
+                <td><button class='normalBtn' onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></td>
+            </tr>";
         }
         $output.="</tbody></table><div id='groupResponse' class='tableContainer'></div>";
     } else {

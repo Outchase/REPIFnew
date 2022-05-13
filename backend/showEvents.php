@@ -16,7 +16,7 @@ if (isset($_POST['showEvent'])){
             $output.="<tr><td>".$row['idEventCode']."</td><td>".$row['dtDescription']."</td><td>".$row['fiPinNr']."</td><td><button class='normalBtn' onclick=showEditEvent('".$row['idEventCode']."','".$hostname."',".$row['fiPinNr'].")>Edit</button></td><td><button class='normalBtn' onclick=deleteEvent('".$row['idEventCode']."','".$hostname."',".$row['fiPinNr'].")>Delete</button></td></tr>";
         }
 
-        $output.="</tbody></table><div id='editEvent' class='tableContainer'></div>";
+        $output.="</tbody></table><div id='editEvent' class='form'></div>";
 
     } else {
         $output= "<p style='color: red'>There are no Events available for ".$hostname.". Please assign an existent event</p>";

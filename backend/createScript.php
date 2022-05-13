@@ -44,7 +44,7 @@ if (isset($_POST['executeScript'])){
 
         echo "ok";
     }else {                                             //else sends message that there are no smartboxes
-        echo "Error: No script assign to any group";
+        echo "Error: No switch assigned";
     }
 }
 ?>

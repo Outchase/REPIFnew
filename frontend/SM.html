@@ -20,9 +20,9 @@
 
         $(document).on('click', ".editSM input", function () {     //listens to a click event at the edit button in Smartbox Management Table
             $(this).parent().parent().next().slideToggle();            //Toggle between slideUp() and slideDown() for the selected element
-            if ($(this).val() ==="Edit"){
+            if ($(this).val() === "Edit") {
                 $(this).val("Cancel");
-            }else {
+            } else {
                 $(this).val("Edit")
             }
         });
@@ -78,26 +78,21 @@
         }
 
         if (addPinDesc.startsWith("GPIO") && addPinDesc.length > 4 && addPinDesc.length < 7 && addPinNr !== "") {       //checks if description input starts with GPIO and the length is between 4 and 6
-            let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-            if (confirm === "Confirm") {         //checks if prompt value is correct
-                $.ajax({
-                    url: "/backend/addPinsSM.php",
-                    method: "POST",
-                    data: {
-                        addPins: 1,
-                        hostname: SMHostname,
-                        addPinDesc: addPinDesc,
-                        addPinInOut: addPinInOut,
-                        addPinNr: addPinNr
-                    },      //makes with ajax method the  Post request
-                    success: function (data) {          //on success a message will display and reloads the page
-                        alert(data);
-                        location.reload();
-                    }
-                });
-            } else {
-                alert("Update got cancelled");      //son prompt cancel or mistype
-            }
+            $.ajax({
+                url: "/backend/addPinsSM.php",
+                method: "POST",
+                data: {
+                    addPins: 1,
+                    hostname: SMHostname,
+                    addPinDesc: addPinDesc,
+                    addPinInOut: addPinInOut,
+                    addPinNr: addPinNr
+                },      //makes with ajax method the  Post request
+                success: function (data) {          //on success a message will display and reloads the page
+                    alert(data);
+                    location.reload();
+                }
+            });
         } else {
             alert("Invalid values");
         }
@@ -176,20 +171,15 @@
     }
 
     function updateSmAssign(SMHostname) {       //assigns smartbox to a user when the button Assign is clicked
-        let confirm = prompt("Are you sure you want to assign " + SMHostname + " to User: " + $("#umOptions option").filter(':selected').text() + "?\nType 'Confirm' to confirm it:");
-        if (confirm === "Confirm") {        // on confirm makes a post request to the server
-            let userId = $("#umOptions").val();
-            $.ajax({
-                url: "/backend/addNewAssignmentToUser.php",
-                method: "POST",
-                data: {addAssign: 1, hostname: SMHostname, userId: userId},
-                success: function (data) {
-                    alert(data);        //display the message
-                }
-            });
-        } else {
-            alert("Smartbox assignment got cancelled");
-        }
+        let userId = $("#umOptions").val();
+        $.ajax({
+            url: "/backend/addNewAssignmentToUser.php",
+            method: "POST",
+            data: {addAssign: 1, hostname: SMHostname, userId: userId},
+            success: function (data) {
+                alert(data);        //display the message
+            }
+        });
     }
 
     function deleteSM(SMHostname) {     //deletes smartbox when the delete button is pressed
@@ -211,26 +201,20 @@
     }
 
     function updateSM(SMHostname) {     //update the changes from smartboxes
-        let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");
-        if (confirm === "Confirm") {        //checks if user confirm the changes
-            let description = $("#editSMDescription" + SMHostname).val();       //saves values into variables
-            let locationSM = $("#editSMLocation" + SMHostname).val();
-            if (description.length > 0 && locationSM.length > 0) {      //checks if values are not empty
-                $.ajax({
-                    url: "/backend/updateSM.php",       //makes post request to the url
-                    method: "POST",
-                    data: {updateSM: SMHostname, description: description, locationSM: locationSM},
-                    success: function (data) {      //on success displays message and reload page
-                        alert(data);
-                        location.reload();
-                    }
-                });
-            } else {
-                alert("Update got cancelled. One or more of the values are empty");
-            }
-
+        let description = $("#editSMDescription" + SMHostname).val();       //saves values into variables
+        let locationSM = $("#editSMLocation" + SMHostname).val();
+        if (description.length > 0 && locationSM.length > 0) {      //checks if values are not empty
+            $.ajax({
+                url: "/backend/updateSM.php",       //makes post request to the url
+                method: "POST",
+                data: {updateSM: SMHostname, description: description, locationSM: locationSM},
+                success: function (data) {      //on success displays message and reload page
+                    alert(data);
+                    location.reload();
+                }
+            });
         } else {
-            alert("Update got cancelled");
+            alert("Update got cancelled. One or more of the values are empty");
         }
 
     }
@@ -258,22 +242,68 @@
 
     }
 
-    function scriptsSM(hostname){
+    function scriptsSM(hostname) {
         $.ajax({
             url: "/backend/scriptsSM.php",
             method: "POST",
             data: {scriptsSM: 1, hostname: hostname},  //sends data over post request to the url
             success: function (data) {              //on success display message
-                if(data==="none"){
-                    $("#smResponse").html("<p style='color: red'>No scripts used for "+hostname+"</p>");        //displays script from the selected smartbox
-                }else {
+                if (data === "none") {
+                    $("#smResponse").html("<p style='color: red'>No scripts used for " + hostname + "</p>");        //displays script from the selected smartbox
+                } else {
                     $("#smResponse").html(data);        //displays script from the selected smartbox
                 }
             }
         });
     }
 
-    function cancelChanges(){
+    function deleteScriptSm(hostname, scriptName) {
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Delete' to confirm it:");
+        if (confirm === "Delete") {
+            $.ajax({
+                url: "/backend/deleteScriptSm.php",
+                method: "POST",
+                data: {deleteScriptSm: 1, hostname: hostname, scriptName: scriptName},  //sends data over post request to the url
+                success: function (data) {              //on success display message
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Delete got cancelled");
+        }
+    }
+
+    function editScriptSm(hostname, path) {
+        $.ajax({
+            url: "/backend/editScriptSm.php",       //makes post request to the url
+            method: "POST",
+            data: {editScriptSm: 1, hostname: hostname, path: path},
+            success: function (data) {      //on success displays message and reload page
+                $("#smResponse").html(data);
+            }
+        });
+    }
+
+    function updateSmScriptContent(scriptName, hostname) {
+        let scriptSmContent = $("#smScriptContentForm").val();
+        $.ajax({
+            url: "/backend/updateSmScriptContent.php",       //makes post request to the url
+            method: "POST",
+            data: {
+                updateSmScriptContent: 1,
+                scriptName: scriptName,
+                hostname: hostname,
+                scriptSmContent: scriptSmContent
+            },
+            success: function (data) {      //on success displays message and reload page
+                alert(data);
+                location.reload();
+            }
+        });
+    }
+
+    function cancelChanges() {
         location.reload();
     }
 </script>

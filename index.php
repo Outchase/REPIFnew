@@ -23,7 +23,7 @@
                         data: {login: 1, email: email, password: password},     //Specifies data to be sent to the server
                         success: function (data) {                              //execute function when request was a success
                             if (data === "") {                                  //checks if data is empty
-                                $(".loginForm").append("<p style='color: red; font-weight: bold '>Email or password is wrong!</p>"); //send message to the selected html id
+                                $("#loginResponse").html("<p style='color: red; font-weight: bold '>Email or password is wrong!</p>"); //send message to the selected html id
                             } else {
                                 location.reload();                          //reloads page
                             }

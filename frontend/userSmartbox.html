@@ -98,6 +98,7 @@
     }
 
     function showGroups(hostname) { // shows available groups from selected hostname
+        $("#assignGroupContent").css("padding", "1rem 0 0 1rem");
         $.ajax({
             url: "./backend/showSmartboxGroup.php",     //makes post request to the url
             method: "POST",
@@ -120,22 +121,6 @@
             data: {showListScript: 1, groupNr: groupNr},
             success: function (data) {      //on success display data
                 $("#assignGroupContent").html(data);
-            }
-        });
-        showUseScript(groupNr);
-    }
-
-    function showUseScript(groupNr) {
-        $.ajax({
-            url: "./backend/showScripts.php",     //makes post request to the url
-            method: "POST",
-            data: {showScripts: 1},
-            success: function (data) {      //on success display data
-                if (data === "error") {
-                    $("#assignGroupContent").append("<p style='color: red'>No groups or scripts available.</p>")
-                } else {
-                    $("#assignGroupContent").append("<label id='scriptChoice'>Select script: <select class='asGr' id='availScript'>" + data + "</select></label><br><div class='formButton'><button class='normalBtn' onclick='useScript(" + groupNr + ")'>Assign</button><input class='normalBtn' type='button' value='Cancel' onclick='cancel()'></div>");
-                }
             }
         });
     }
@@ -252,6 +237,7 @@
     }
 
     function checkAffects(hostname) {    // checks if selected smartbox have assigned Groups
+        $("#assignGroupContent").css("padding", "1rem 0 0 1rem");
         $.ajax({
             url: "./backend/showSmartboxGroup.php",     //makes post request to the url
             method: "POST",
@@ -395,6 +381,7 @@
     }
 
     function showExecuteSwitch(hostname) { //display table of Switches
+        $("#assignGroupContent").css("padding", "1rem 0 0 1rem");
         $.ajax({
             url: "./backend/showSwitchTable.php",     //makes post request to the url
             method: "POST",
@@ -613,6 +600,23 @@
                 location.reload();
             }
         });
+    }
+
+    function removeScriptUse(groupNr, scriptName){
+        let confirm = prompt("Are you sure you want to make those changes?\nType 'Remove' to confirm it:");
+        if (confirm === "Remove") {
+            $.ajax({
+                url: "/backend/removeScriptUse.php",
+                method: "POST",
+                data: {removeScriptUse: 1, groupNr: groupNr, scriptName: scriptName},  //sends data over post request to the url
+                success: function (data) {              //on success display message
+                    alert(data);
+                    location.reload();
+                }
+            });
+        } else {
+            alert("Delete got cancelled");
+        }
     }
 
     function cancel() {

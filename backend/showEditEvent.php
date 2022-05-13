@@ -13,8 +13,8 @@ if (isset($_POST['showEditEvent'])){
         $row = mysqli_fetch_assoc($result);
         $output= "<h2>Edit event ".$eventCode.":</h2><label>Event Code: <input id='inputEventCode".$eventCode.$hostname.$pinNr."' type='text' required value='".$row['idEventCode']."'></label><br>
         <label>Description: <input id='inputEventDesc".$eventCode.$hostname.$pinNr."'type='text' value='".$row['dtDescription']."' required></label><br>
-        <button class='normalBtn' onclick=updateEvent('".$eventCode."','".$hostname."',".$pinNr.")>Update</button>
-        <button class='normalBtn' onclick='cancel()'>Cancel</button>";
+        <div class='formButton'><button class='normalBtn' onclick=updateEvent('".$eventCode."','".$hostname."',".$pinNr.")>Update</button>
+        <button class='normalBtn' onclick='cancel()'>Cancel</button></div>";
         echo $output;
     }
 }
