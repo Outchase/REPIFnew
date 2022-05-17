@@ -114,24 +114,24 @@
         showGroupAssignForm(hostname);
     }
 
-    function assignScript(groupNr) {     //show assignScript form
+    function assignScript(hostname,groupNr) {     //show assignScript form
         $.ajax({
             url: "./backend/showListScript.php",     //makes post request to the url
             method: "POST",
-            data: {showListScript: 1, groupNr: groupNr},
+            data: {showListScript: 1, groupNr: groupNr, hostname:hostname},
             success: function (data) {      //on success display data
                 $("#assignGroupContent").html(data);
             }
         });
     }
 
-    function useScript(groupNr) {    //assign Script with group
+    function useScript(hostname,groupNr) {    //assign Script with group
         let scriptName = $("#availScript").val();
 
         $.ajax({
             url: "./backend/useScript.php",     //makes post request to the url
             method: "POST",
-            data: {useScript: 1, groupNr: groupNr, scriptName: scriptName},
+            data: {useScript: 1, groupNr: groupNr, scriptName: scriptName, hostname:hostname},
             success: function (data) {      //on success display data
                 if (data === "Error") {
                     alert(data + ": Already in use");
@@ -602,13 +602,13 @@
         });
     }
 
-    function removeScriptUse(groupNr, scriptName){
+    function removeScriptUse(groupNr, scriptName, hostname){
         let confirm = prompt("Are you sure you want to make those changes?\nType 'Remove' to confirm it:");
         if (confirm === "Remove") {
             $.ajax({
                 url: "/backend/removeScriptUse.php",
                 method: "POST",
-                data: {removeScriptUse: 1, groupNr: groupNr, scriptName: scriptName},  //sends data over post request to the url
+                data: {removeScriptUse: 1, groupNr: groupNr, scriptName: scriptName, hostname: hostname},  //sends data over post request to the url
                 success: function (data) {              //on success display message
                     alert(data);
                     location.reload();

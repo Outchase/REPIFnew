@@ -3,6 +3,7 @@ if (isset($_POST['showListScript'])) {
     include_once "sqlConnect.inc";      //connects to the database
 
     $groupNr = $_POST['groupNr'];
+    $hostname = $_POST['hostname'];
     $output = "";
 
     $sql = "SELECT tblUse.fiScriptName, tblScript.dtDescription FROM tblUse 
@@ -15,7 +16,7 @@ if (isset($_POST['showListScript'])) {
         for ($i=0; $i<mysqli_num_rows($result); $i++) {
 
             $row = mysqli_fetch_assoc($result);
-            $output.="<tr><td>".$row['fiScriptName']."</td><td>".$row['dtDescription']."</td><td><input value='Remove' type='button' onclick=removeScriptUse('".$groupNr."','".$row['fiScriptName']."') class='normalBtn'></td></tr>";
+            $output.="<tr><td>".$row['fiScriptName']."</td><td>".$row['dtDescription']."</td><td><input value='Remove' type='button' onclick=removeScriptUse('".$groupNr."','".$row['fiScriptName']."','".$hostname."') class='normalBtn'></td></tr>";
         }
         $output.="</tr></tbody></table>";
     }else{
@@ -31,7 +32,7 @@ if (isset($_POST['showListScript'])) {
             $row = mysqli_fetch_assoc($result);
             $output.="<option value='".$row['idScriptName']."'>".$row['idScriptName']."</option>";
         }
-        $output.="</select></label><br><div class='formButton'><button class='normalBtn' onclick='useScript(" . $groupNr . ")'>Assign</button>";
+        $output.="</select></label><br><div class='formButton'><button class='normalBtn' onclick=useScript('".$hostname."'," . $groupNr . ")>Assign</button>";
     } else {
         $output.= "<p style='color: red; padding-left: 0.5rem;'>No Script available. Contact Technician.</p><div class='formButton'>";
     }

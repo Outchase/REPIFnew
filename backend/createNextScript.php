@@ -24,7 +24,7 @@ if (isset($_POST['executeNextScript'])) {
                 $output .= "S," . $row['fiScriptName'] . ":" . $row['idShouldFunctionsCode'];
                 $filterScriptName = $row['fiScriptName'];
                 $filterFunctionCode = $row['idShouldFunctionsCode'];
-                $tempSql = $sql . " AND fiScriptName='$filterScriptName' AND idShouldFunctionsCode='$filterFunctionCode'";
+                $tempSql = $sql . " AND fiScriptName='$filterScriptName' AND idShouldFunctionsCode='$filterFunctionCode'";  // second query will be performed
                 $result2 = $mysqli->query($tempSql);             //performs query in a database
                 if ($result2->num_rows > 0) {                //Return the number of rows in a result set
                     for ($j = 0; $j < mysqli_num_rows($result2); $j++) {

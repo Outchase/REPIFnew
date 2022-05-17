@@ -228,7 +228,7 @@ div.umContainer form{
 select#typeScript {
     width: 10.5rem;
 }
-textarea#scriptContentForm {
+textarea{
     resize: none;
     height: 5rem;
 }

@@ -64,8 +64,6 @@
     });
 
     function updateUser(userID) {                //executes function with Id parameter when user clicks on confirm button at User edit
-        let confirm = prompt("Are you sure you want to make those changes?\nType 'Confirm' to confirm it:");      //prompt to confirm changes and executes it
-        if (confirm === "Confirm") {                                                             //checks if prompt value is correct
             let name = $("#editUserName" + userID).val();                                       //saves values into a variable from given parameter
             let firstName = $("#editUserFirstName" + userID).val();
             let email = $("#editUserEmail" + userID).val();
@@ -86,9 +84,6 @@
             } else {                                                                           //cancel updates if email is not valid
                 alert("email is invalid");
             }
-        } else {                                                                                //cancel update on mistype or cancel in prompt
-            alert("Update got cancelled");
-        }
 
     }
 
@@ -122,7 +117,7 @@
         let email = $("#inputEmail").val();
         let password = $("#inputPassword").val();
         $.ajax({
-            url: "/backend/createUser.php",
+            url: "./backend/createUser.php",
             method: "POST",                          //sends with ajax over Post request the data
             data: {
                 createUser: 1,

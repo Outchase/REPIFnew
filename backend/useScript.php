@@ -3,6 +3,7 @@ if (isset($_POST['useScript'])) {
     include_once "sqlConnect.inc";      //connects to the database
     $groupNr = $_POST['groupNr'];
     $scriptName = $_POST['scriptName'];
+    $hostname=  $_POST['hostname'];
 
     $sql = "SELECT * FROM tblUse WHERE fiGroupNr='$groupNr' AND fiScriptname='$scriptName'";       //query to selected everything from specific Id
     $result = $mysqli->query($sql);         //saves query result into variable
@@ -16,10 +17,10 @@ if (isset($_POST['useScript'])) {
         $path= $row['dtPath'];
         $sourcePath = "/smartbox/Scripts" . $path;      // saves selected path into variable
 
-        $sql = "SELECT fiHostname FROM tblAffect WHERE fiGroupNr= '$groupNr'"; // get hostname
+        /*$sql = "SELECT fiHostname FROM tblAffect WHERE fiGroupNr= '$groupNr'"; // get hostname
         $result = $mysqli->query($sql);         //saves query result into variable
-        $row = mysqli_fetch_assoc($result);
-        $smartboxPath = "/smartbox/" . $row['fiHostname'];  //saves hostname into variable
+        $row = mysqli_fetch_assoc($result);*/
+        $smartboxPath = "/smartbox/" . $hostname;  //saves hostname into variable
 
 
         $a= explode("/", $path); //splits string and saves it into the array

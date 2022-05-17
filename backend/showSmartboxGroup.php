@@ -19,7 +19,7 @@ if (isset($_POST['smGr'])){
                 <td>". $row['dtDescription'] ."</td>
                 <td><button class='normalBtn' onclick=showGroupAssignForm('".$hostname."')>Assign Groups</button></td>
                 <td><button class='normalBtn' onclick='showGroupPins(".$row['fiGroupNr'].")'>Pins</button></td>
-                <td><button class='normalBtn' onclick='assignScript(".$row['fiGroupNr'].")'>Scripts</button></td>
+                <td><button class='normalBtn' onclick=assignScript('".$hostname."',".$row['fiGroupNr'].")>Scripts</button></td>
                 <td><button class='normalBtn' onclick='editGroup(".$row['fiGroupNr'].")'>Edit group</button></td>
                 <td><button class='normalBtn' onclick='deleteGroup(".$row['fiGroupNr'].")'>Delete group</button></td>
             </tr>";
